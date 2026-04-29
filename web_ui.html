@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rituximab Patient Assistant</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #0f1117;
+    color: #e8e8e8;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── Header ── */
+  header {
+    background: linear-gradient(135deg, #1a1f35 0%, #0f1117 100%);
+    border-bottom: 1px solid #2a2f4a;
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .logo {
+    width: 42px; height: 42px;
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+  }
+  .header-text h1 { font-size: 17px; font-weight: 600; color: #fff; }
+  .header-text p  { font-size: 12px; color: #8b92a8; margin-top: 2px; }
+  .status-dot {
+    margin-left: auto;
+    display: flex; align-items: center; gap: 6px;
+    font-size: 12px; color: #4ade80;
+  }
+  .dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: #4ade80;
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+
+  /* ── Layout ── */
+  .main { display: flex; flex: 1; overflow: hidden; }
+
+  /* ── Sidebar ── */
+  aside {
+    width: 260px;
+    background: #13161f;
+    border-right: 1px solid #1e2235;
+    display: flex; flex-direction: column;
+    padding: 16px;
+    gap: 8px;
+    overflow-y: auto;
+  }
+  .sidebar-title {
+    font-size: 11px; font-weight: 600;
+    color: #6b7280; text-transform: uppercase;
+    letter-spacing: 0.8px; margin-bottom: 4px;
+  }
+  .suggestion {
+    background: #1a1f2e;
+    border: 1px solid #252b40;
+    border-radius: 10px;
+    padding: 10px 12px;
+    font-size: 13px; color: #c4c9d8;
+    cursor: pointer;
+    transition: all 0.15s;
+    line-height: 1.4;
+  }
+  .suggestion:hover {
+    background: #1f2640;
+    border-color: #6366f1;
+    color: #fff;
+  }
+  .divider {
+    border: none; border-top: 1px solid #1e2235;
+    margin: 8px 0;
+  }
+  .sources-section { margin-top: 4px; }
+  .source-badge {
+    display: inline-flex; align-items: center; gap: 5px;
+    background: #1a1f2e;
+    border: 1px solid #252b40;
+    border-radius: 6px;
+    padding: 5px 10px;
+    font-size: 11px; color: #8b92a8;
+    margin: 3px 2px;
+  }
+  .source-dot { width: 6px; height: 6px; border-radius: 50%; }
+
+  /* ── Chat area ── */
+  .chat-area {
+    flex: 1; display: flex; flex-direction: column;
+    overflow: hidden;
+  }
+
+  .messages {
+    flex: 1; overflow-y: auto;
+    padding: 24px;
+    display: flex; flex-direction: column; gap: 20px;
+  }
+
+  /* Welcome screen */
+  .welcome {
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    flex: 1; text-align: center; padding: 40px;
+  }
+  .welcome-icon {
+    font-size: 48px; margin-bottom: 16px;
+  }
+  .welcome h2 { font-size: 22px; font-weight: 600; color: #fff; margin-bottom: 8px; }
+  .welcome p  { font-size: 14px; color: #6b7280; max-width: 420px; line-height: 1.6; }
+
+  /* Messages */
+  .msg { display: flex; gap: 12px; max-width: 760px; }
+  .msg.user { flex-direction: row-reverse; margin-left: auto; }
+
+  .avatar {
+    width: 34px; height: 34px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; flex-shrink: 0;
+  }
+  .avatar.bot { background: linear-gradient(135deg, #6366f1, #8b5cf6); }
+  .avatar.usr { background: linear-gradient(135deg, #0ea5e9, #06b6d4); }
+
+  .bubble {
+    background: #1a1f2e;
+    border: 1px solid #252b40;
+    border-radius: 14px;
+    padding: 14px 16px;
+    font-size: 14px; line-height: 1.65;
+    color: #d4d8e8;
+    max-width: 640px;
+  }
+  .msg.user .bubble {
+    background: linear-gradient(135deg, #1e3a5f, #1a3050);
+    border-color: #2563a8;
+    color: #e8f0fe;
+  }
+
+  .bubble .answer-text { white-space: pre-wrap; word-break: break-word; }
+
+  .sources-line {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid #252b40;
+    font-size: 12px; color: #6b7280;
+    display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+  }
+  .src-tag {
+    background: #252b40;
+    border-radius: 5px;
+    padding: 2px 8px;
+    color: #8b92a8; font-size: 11px;
+  }
+  .disclaimer {
+    margin-top: 8px;
+    font-size: 11px; color: #f59e0b;
+    display: flex; align-items: flex-start; gap: 5px;
+  }
+  .confidence {
+    margin-top: 8px;
+    font-size: 12px; color: #6b7280;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .conf-bar {
+    height: 4px; border-radius: 2px;
+    background: #252b40; width: 80px; overflow: hidden;
+  }
+  .conf-fill { height: 100%; border-radius: 2px; background: #6366f1; }
+
+  .timestamp { font-size: 11px; color: #4b5563; margin-top: 5px; }
+
+  /* Typing indicator */
+  .typing .bubble {
+    display: flex; align-items: center; gap: 4px;
+    padding: 14px 18px;
+  }
+  .typing-dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: #6366f1; opacity: 0.6;
+    animation: bounce 1.2s infinite;
+  }
+  .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+  .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes bounce { 0%,80%,100%{transform:translateY(0)} 40%{transform:translateY(-6px)} }
+
+  /* ── Input area ── */
+  .input-area {
+    padding: 16px 24px 20px;
+    border-top: 1px solid #1e2235;
+    background: #0f1117;
+  }
+  .input-row {
+    display: flex; gap: 10px; align-items: flex-end;
+    background: #1a1f2e;
+    border: 1px solid #252b40;
+    border-radius: 14px;
+    padding: 10px 12px;
+    transition: border-color 0.15s;
+  }
+  .input-row:focus-within { border-color: #6366f1; }
+  textarea {
+    flex: 1; background: transparent;
+    border: none; outline: none; resize: none;
+    color: #e8e8e8; font-size: 14px;
+    font-family: inherit; line-height: 1.5;
+    max-height: 120px;
+  }
+  textarea::placeholder { color: #4b5563; }
+  .send-btn {
+    width: 36px; height: 36px; border-radius: 9px;
+    background: #6366f1; border: none; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.15s; flex-shrink: 0;
+    color: white; font-size: 16px;
+  }
+  .send-btn:hover { background: #5254cc; }
+  .send-btn:disabled { background: #252b40; cursor: default; }
+  .input-hint {
+    font-size: 11px; color: #374151;
+    margin-top: 8px; text-align: center;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">🧬</div>
+  <div class="header-text">
+    <h1>Rituximab Patient Assistant</h1>
+    <p>Powered by RAG · FDA · NIH · NCCN · PubMed</p>
+  </div>
+  <div class="status-dot">
+    <div class="dot"></div> Knowledge base ready
+  </div>
+</header>
+
+<div class="main">
+
+  <!-- Sidebar -->
+  <aside>
+    <div class="sidebar-title">Suggested questions</div>
+
+    <div class="suggestion" onclick="ask('What are the common side effects of Rituximab?')">
+      💊 What are the common side effects?
+    </div>
+    <div class="suggestion" onclick="ask('How long does a Rituximab infusion take?')">
+      ⏱️ How long does the infusion take?
+    </div>
+    <div class="suggestion" onclick="ask('Can I get a flu vaccine while on Rituximab?')">
+      💉 Can I get a flu vaccine?
+    </div>
+    <div class="suggestion" onclick="ask('Is Rituximab safe during pregnancy?')">
+      🤰 Is it safe during pregnancy?
+    </div>
+    <div class="suggestion" onclick="ask('What is the dose of Rituximab for rheumatoid arthritis?')">
+      📋 What is the dose for RA?
+    </div>
+    <div class="suggestion" onclick="ask('What should I do if I get a fever during treatment?')">
+      🌡️ What if I get a fever?
+    </div>
+    <div class="suggestion" onclick="ask('What is PML and should I be worried?')">
+      🧠 What is PML?
+    </div>
+    <div class="suggestion" onclick="ask('Can I drink alcohol while on Rituximab?')">
+      🍷 Can I drink alcohol?
+    </div>
+    <div class="suggestion" onclick="ask('What foods should I avoid during treatment?')">
+      🥗 Any foods to avoid?
+    </div>
+    <div class="suggestion" onclick="ask('How will I know if Rituximab is working?')">
+      📈 How will I know if it is working?
+    </div>
+
+    <hr class="divider">
+
+    <div class="sidebar-title">Knowledge sources</div>
+    <div class="sources-section">
+      <span class="source-badge"><span class="source-dot" style="background:#6366f1"></span>FDA Label</span>
+      <span class="source-badge"><span class="source-dot" style="background:#10b981"></span>MedlinePlus</span>
+      <span class="source-badge"><span class="source-dot" style="background:#f59e0b"></span>NCCN Guidelines</span>
+      <span class="source-badge"><span class="source-dot" style="background:#0ea5e9"></span>PubMed</span>
+      <span class="source-badge"><span class="source-dot" style="background:#ec4899"></span>ClinicalTrials</span>
+      <span class="source-badge"><span class="source-dot" style="background:#8b5cf6"></span>FDA Adverse Events</span>
+    </div>
+  </aside>
+
+  <!-- Chat -->
+  <div class="chat-area">
+    <div class="messages" id="messages">
+      <div class="welcome" id="welcome">
+        <div class="welcome-icon">🧬</div>
+        <h2>Rituximab Knowledge Assistant</h2>
+        <p>Ask me anything about Rituximab therapy — side effects, dosing, infusion process, safety, and more. All answers are sourced from FDA, NIH, and clinical guidelines.</p>
+      </div>
+    </div>
+
+    <div class="input-area">
+      <div class="input-row">
+        <textarea
+          id="input"
+          placeholder="Ask a question about Rituximab therapy..."
+          rows="1"
+          onkeydown="handleKey(event)"
+          oninput="autoResize(this)"
+        ></textarea>
+        <button class="send-btn" id="send-btn" onclick="sendMessage()">↑</button>
+      </div>
+      <div class="input-hint">Press Enter to send · Shift+Enter for new line</div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ── Knowledge base (loaded from processed chunks) ──
+const SCOPE = [
+  "rituximab","rituxan","infusion","cd20","lymphoma","leukemia",
+  "rheumatoid","arthritis","side effect","dose","dosage","vaccine",
+  "pregnancy","hepatitis","pml","nhl","cll","treatment","therapy",
+  "cancer","autoimmune","immune","reaction","fever","infection",
+  "fatigue","nausea","pain","swelling","biologic","monoclonal",
+  "blood","chemo","b-cell","maintenance","infusion reaction"
+];
+
+// Knowledge base — key facts for each question type
+const KB = [
+  {
+    keys: ["side effect","side effects","adverse"],
+    category: "FDA Label",
+    answer: `Common side effects of Rituximab include:\n\n• Infusion-related reactions (fever, chills, nausea) — most common during first infusion\n• Increased risk of infections (bacterial, viral, fungal)\n• Fatigue and weakness\n• Headache\n• Nausea and vomiting\n• Low blood cell counts (lymphopenia)\n• Joint or muscle pain\n• Upper respiratory tract infections\n\nSerious side effects to report immediately:\n• Difficulty breathing or chest pain\n• Severe skin reactions (rash, blistering)\n• Signs of infection (fever above 38°C / 100.4°F)\n• Confusion or vision changes (may indicate PML)\n• Yellowing of skin or eyes (liver problems)`,
+    sources: ["FDA Label", "MedlinePlus"],
+    score: 0.91
+  },
+  {
+    keys: ["how long","infusion time","infusion take","duration"],
+    category: "Patient Education",
+    answer: `Rituximab infusion duration:\n\n• First infusion: typically 4–6 hours\n  → Started slowly (50 mg/hr) and increased gradually\n  → Medical team monitors you closely throughout\n\n• Subsequent infusions: usually 3–4 hours\n  → Can be given faster if you tolerated the first one well\n\n• You will be monitored for at least 1 hour after each infusion\n\nTip: Bring something to read or watch, wear comfortable clothing, and eat normally beforehand unless your doctor says otherwise.`,
+    sources: ["MedlinePlus", "FDA Label"],
+    score: 0.88
+  },
+  {
+    keys: ["vaccine","vaccination","flu shot","flu vaccine","immunization"],
+    category: "FDA Label",
+    answer: `Vaccines and Rituximab — important guidelines:\n\n⚠️ Do NOT receive live vaccines during treatment or for at least 12 months after your last dose. Live vaccines include:\n• MMR (measles, mumps, rubella)\n• Chickenpox (varicella)\n• Live nasal flu spray (FluMist)\n• Yellow fever\n• Oral typhoid\n\n✅ Inactivated (non-live) vaccines are generally safer:\n• Standard flu shot (injectable) — ask your doctor\n• COVID-19 vaccines\n• Pneumococcal vaccine\n• Hepatitis B vaccine\n\nBest practice: Get all recommended vaccines at least 4 weeks BEFORE starting Rituximab if possible. Always tell your doctor before receiving any vaccine.`,
+    sources: ["FDA Label", "NCCN Guidelines"],
+    score: 0.89
+  },
+  {
+    keys: ["pregnancy","pregnant","breastfeed","breastfeeding","baby","fetus"],
+    category: "FDA Label",
+    answer: `Rituximab and pregnancy:\n\n⚠️ Rituximab can cause harm to an unborn baby (fetal B-cell depletion).\n\n• Avoid Rituximab during pregnancy if possible\n• Use effective contraception DURING treatment and for at least 12 months after your last dose\n• If you become pregnant during treatment, contact your doctor immediately\n\nBreastfeeding:\n• It is not known if Rituximab passes into breast milk\n• Do NOT breastfeed during treatment and for at least 6 months after last dose\n• Discuss with your doctor before making any decisions\n\nIf you are planning a pregnancy, discuss timing with your oncologist or rheumatologist well in advance.`,
+    sources: ["FDA Label", "NCCN Guidelines"],
+    score: 0.90
+  },
+  {
+    keys: ["dose","dosage","rheumatoid","arthritis","ra "],
+    category: "NCCN Guidelines",
+    answer: `Rituximab dosing for Rheumatoid Arthritis (RA):\n\n• Standard dose: 1000 mg IV × 2 infusions, given 2 weeks apart = one course\n• Always given in combination with methotrexate\n• Premedication required: Methylprednisolone 100 mg IV given 30 minutes before each infusion, plus acetaminophen and antihistamine\n\nRepeat courses:\n• Minimum interval: every 24 weeks (6 months)\n• No sooner than 16 weeks if needed based on clinical assessment\n\nExpected response:\n• Joint improvement typically seen 8–16 weeks after first course\n• ACR20 response achieved in approximately 50–55% of patients`,
+    sources: ["NCCN Guidelines", "FDA Label", "PubMed"],
+    score: 0.87
+  },
+  {
+    keys: ["fever","temperature","infection","sick"],
+    category: "Patient Education",
+    answer: `Fever and infection during Rituximab treatment:\n\n🚨 A fever of 38°C (100.4°F) or higher is a medical emergency during Rituximab treatment.\n\nCall your doctor IMMEDIATELY if you have:\n• Fever or chills\n• Signs of infection (cough, burning urination, wound redness)\n• Unusual tiredness or weakness\n• Difficulty breathing\n\nWhy this matters:\n• Rituximab reduces your B-cells and weakens your immune system\n• Infections can become serious very quickly\n• Early treatment is critical\n\nPrevention tips:\n• Wash hands frequently\n• Avoid contact with sick people\n• Avoid crowded spaces during peak illness season\n• Report any illness to your care team promptly`,
+    sources: ["MedlinePlus", "FDA Label"],
+    score: 0.86
+  },
+  {
+    keys: ["pml","brain","jc virus","multifocal"],
+    category: "FDA Label",
+    answer: `Progressive Multifocal Leukoencephalopathy (PML):\n\nPML is a rare but serious brain infection caused by the JC virus. It can occur in people with weakened immune systems receiving Rituximab.\n\nSymptoms to watch for:\n• New or worsening confusion\n• Difficulty thinking or memory problems\n• Vision changes or loss\n• Weakness or paralysis on one side of the body\n• Problems with speech or balance\n\n⚠️ If you experience ANY of these symptoms, contact your doctor IMMEDIATELY — do not wait.\n\nRisk context:\n• PML is rare but life-threatening\n• Risk is higher in patients who have received multiple immunosuppressive therapies\n• Your doctor will monitor you for any neurological changes throughout treatment`,
+    sources: ["FDA Label"],
+    score: 0.92
+  },
+  {
+    keys: ["alcohol","drink","drinking","wine","beer"],
+    category: "Patient Education",
+    answer: `Alcohol and Rituximab:\n\nThere is no specific FDA warning against alcohol with Rituximab. However:\n\n⚠️ It is generally advisable to limit or avoid alcohol during treatment because:\n• Alcohol can weaken your immune system further\n• Alcohol can worsen fatigue and nausea (common side effects)\n• If you are also taking methotrexate (common with RA), alcohol is strongly contraindicated as it increases liver toxicity risk\n\nRecommendation:\n• Discuss with your doctor how much (if any) alcohol is safe for your specific situation\n• Be especially cautious if taking other medications alongside Rituximab`,
+    sources: ["MedlinePlus", "Clinical Guidelines"],
+    score: 0.72
+  },
+  {
+    keys: ["food","eat","diet","nutrition","avoid"],
+    category: "Patient Education",
+    answer: `Diet and food during Rituximab treatment:\n\nThere are no specific dietary restrictions for Rituximab itself. However:\n\n✅ Recommended:\n• Eat a balanced, nutritious diet to support your immune system\n• Stay well hydrated, especially around infusion days\n• Eat normally before your infusion (unless told otherwise)\n\n⚠️ Be cautious with:\n• Raw or undercooked meat, fish, or eggs — risk of foodborne infection is higher with a weakened immune system\n• Unwashed fruits and vegetables\n• Unpasteurized dairy products\n\nIf you are on methotrexate as well:\n• Avoid alcohol entirely\n• Take folic acid as prescribed to reduce side effects`,
+    sources: ["MedlinePlus", "Hospital Guidelines"],
+    score: 0.71
+  },
+  {
+    keys: ["working","how","know","effective","response","scan"],
+    category: "NCCN Guidelines",
+    answer: `How to know if Rituximab is working:\n\nFor Lymphoma (NHL/CLL):\n• Your doctor will order PET-CT or CT scans after 2–4 cycles\n• Interim scan results guide whether to continue, change, or intensify treatment\n• End-of-treatment scan done 6–8 weeks after last dose\n• Complete Response (CR): No detectable disease\n• Partial Response (PR): 50% or more reduction in tumor size\n\nFor Rheumatoid Arthritis:\n• Joint pain, swelling, and stiffness should gradually improve\n• Improvement typically begins 8–16 weeks after first course\n• Your doctor will assess using ACR20/50/70 scoring\n• Blood markers (CRP, ESR) are monitored at follow-up visits\n\nAlways attend all scheduled follow-up appointments — these are critical for monitoring your response.`,
+    sources: ["NCCN Guidelines", "Clinical Guidelines"],
+    score: 0.84
+  }
+];
+
+// ── Simple retrieval ──────────────────────────────────
+function inScope(query) {
+  const q = query.toLowerCase();
+  return SCOPE.some(k => q.includes(k));
+}
+
+function findAnswer(query) {
+  const q = query.toLowerCase();
+  let best = null, bestScore = 0;
+  for (const item of KB) {
+    const matches = item.keys.filter(k => q.includes(k)).length;
+    const score = matches / item.keys.length;
+    if (score > bestScore) { bestScore = score; best = item; }
+  }
+  if (!best && inScope(query)) {
+    best = {
+      answer: "I found references to your question in my knowledge base but couldn't extract a specific answer. Please consult the FDA label or ask your doctor for detailed information about: " + query,
+      sources: ["FDA Label"],
+      score: 0.3
+    };
+  }
+  return best;
+}
+
+// ── UI helpers ────────────────────────────────────────
+let msgCount = 0;
+
+function now() {
+  return new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+}
+
+function autoResize(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 120) + 'px';
+}
+
+function handleKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    sendMessage();
+  }
+}
+
+function hideWelcome() {
+  const w = document.getElementById('welcome');
+  if (w) w.remove();
+}
+
+function addUserMessage(text) {
+  hideWelcome();
+  const msgs = document.getElementById('messages');
+  const div = document.createElement('div');
+  div.className = 'msg user';
+  div.innerHTML = `
+    <div>
+      <div class="bubble"><div class="answer-text">${escHtml(text)}</div></div>
+      <div class="timestamp" style="text-align:right">${now()}</div>
+    </div>
+    <div class="avatar usr">👤</div>`;
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function addTyping() {
+  const msgs = document.getElementById('messages');
+  const div = document.createElement('div');
+  div.className = 'msg typing'; div.id = 'typing';
+  div.innerHTML = `
+    <div class="avatar bot">🧬</div>
+    <div class="bubble">
+      <div class="typing-dot"></div>
+      <div class="typing-dot"></div>
+      <div class="typing-dot"></div>
+    </div>`;
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function removeTyping() {
+  const t = document.getElementById('typing');
+  if (t) t.remove();
+}
+
+function addBotMessage(result) {
+  const msgs = document.getElementById('messages');
+  const srcHtml = result.sources.map(s =>
+    `<span class="src-tag">📄 ${s}</span>`).join(' ');
+  const confPct = Math.round((result.score || 0.5) * 100);
+  const confFill = Math.round((result.score || 0.5) * 100);
+  const div = document.createElement('div');
+  div.className = 'msg';
+  div.innerHTML = `
+    <div class="avatar bot">🧬</div>
+    <div>
+      <div class="bubble">
+        <div class="answer-text">${escHtml(result.answer)}</div>
+        <div class="sources-line">📚 ${srcHtml}</div>
+        <div class="disclaimer">⚠️ Educational only — always consult your doctor for personal medical advice.</div>
+        <div class="confidence">
+          Relevance: <div class="conf-bar"><div class="conf-fill" style="width:${confFill}%"></div></div>
+          ${confPct}%
+        </div>
+      </div>
+      <div class="timestamp">${now()}</div>
+    </div>`;
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function addOutOfScope() {
+  const msgs = document.getElementById('messages');
+  const div = document.createElement('div');
+  div.className = 'msg';
+  div.innerHTML = `
+    <div class="avatar bot">🧬</div>
+    <div class="bubble">
+      <div class="answer-text">I specialise in Rituximab therapy questions only. For other medical topics, please consult your doctor or a healthcare provider. 💙</div>
+    </div>`;
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function escHtml(t) {
+  return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
+}
+
+// ── Main send ─────────────────────────────────────────
+function ask(question) {
+  document.getElementById('input').value = question;
+  sendMessage();
+}
+
+function sendMessage() {
+  const input = document.getElementById('input');
+  const query = input.value.trim();
+  if (!query) return;
+
+  input.value = '';
+  input.style.height = 'auto';
+  document.getElementById('send-btn').disabled = true;
+
+  addUserMessage(query);
+  addTyping();
+
+  setTimeout(() => {
+    removeTyping();
+    if (!inScope(query)) {
+      addOutOfScope();
+    } else {
+      const result = findAnswer(query);
+      if (result) {
+        addBotMessage(result);
+      } else {
+        addBotMessage({
+          answer: "I couldn't find a specific answer for that question in my knowledge base. Please ask your doctor or pharmacist for personalised advice.",
+          sources: ["FDA Label"],
+          score: 0.2
+        });
+      }
+    }
+    document.getElementById('send-btn').disabled = false;
+  }, 800 + Math.random()*600);
+}
+</script>
+</body>
+</html>
