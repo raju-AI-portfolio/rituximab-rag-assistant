@@ -1,6 +1,8 @@
 # 🧬 Rituximab Patient Knowledge Assistant
 
 > An AI-powered Retrieval-Augmented Generation (RAG) system that helps patients access accurate, source-verified information about Rituximab therapy — available 24/7, grounded in FDA, NIH, NCCN, and PubMed sources.
+>
+> **Deployed on Render- live Demo: https://rituximab-rag-assistant.onrender.com/**
 
 [![Live Demo](https://img.shields.io/badge/Live%20Demo-Render.com-28a745?style=for-the-badge&logo=render)](https://rituximab-rag-assistant.onrender.com)
 [![Python](https://img.shields.io/badge/Python-3.9-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
