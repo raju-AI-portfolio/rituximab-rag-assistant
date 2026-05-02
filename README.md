@@ -411,13 +411,8 @@ docker run -p 8000:8000 rituximab-rag
 
 ---
 
-## 📄 Resume Summary
-
-**Technical:**
-> Designed and developed an AI-powered Rituximab therapy knowledge assistant using Retrieval-Augmented Generation (RAG), integrating FDA labels, NIH, NCCN, and PubMed data sources into a 1,019-chunk vector knowledge base deployed live on Render.com.
-
 **Impact:**
-> Built a domain-specific RAG-based clinical assistant for Rituximab therapy, enabling patients to access structured, source-verified drug information across oncology, rheumatology, and neurology use cases.
+> domain-specific RAG-based clinical assistant for Rituximab therapy, enabling patients to access structured, source-verified drug information across oncology, rheumatology, and neurology use cases.
 
 ---
 
