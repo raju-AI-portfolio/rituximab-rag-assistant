@@ -1,5 +1,7 @@
+.DS_Store
+.env
 data/
 __pycache__/
 *.pkl
 *.pyc
-.env
+*.pdf
