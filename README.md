@@ -1,218 +1,256 @@
+<div align="center">
+
 # 🧬 Rituximab Patient Knowledge Assistant
 
-> An AI-powered Retrieval-Augmented Generation (RAG) system that helps patients access accurate, source-verified information about Rituximab therapy — available 24/7, grounded in FDA, NIH, NCCN, and PubMed sources.
->
-> **Deployed on Render- live Demo: https://rituximab-rag-assistant.onrender.com/**
+### Phase 1 — Production Release
 
-[![Live Demo](https://img.shields.io/badge/Live%20Demo-Render.com-28a745?style=for-the-badge&logo=render)](https://rituximab-rag-assistant.onrender.com)
+**AI-powered RAG system for Rituximab therapy patient education**
+
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-Render.com-28a745?style=for-the-badge&logo=render&logoColor=white)](https://rituximab-rag-assistant.onrender.com)
 [![Python](https://img.shields.io/badge/Python-3.9-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
-[![FastAPI](https://img.shields.io/badge/FastAPI-0.112-009688?style=for-the-badge&logo=fastapi)](https://fastapi.tiangolo.com)
+[![Pinecone](https://img.shields.io/badge/Pinecone-Serverless-000000?style=for-the-badge&logo=pinecone&logoColor=white)](https://pinecone.io)
+[![OpenAI](https://img.shields.io/badge/GPT--4o--mini-OpenAI-412991?style=for-the-badge&logo=openai&logoColor=white)](https://openai.com)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.112-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
 [![License](https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge)](LICENSE)
+
+*Helping patients understand their Rituximab therapy — 24/7, grounded in FDA, NIH, NCCN and PubMed*
+
+</div>
 
 ---
 
 ## 📋 Table of Contents
 
 - [About the Project](#-about-the-project)
+- [Phase 1 Upgrades](#-phase-1-upgrades)
 - [How It Helps Patients](#-how-it-helps-patients)
 - [Benefits to Organisations](#-benefits-to-organisations)
-- [System Architecture](#-system-architecture)
-- [Knowledge Base & Data Sources](#-knowledge-base--data-sources)
-- [Features](#-features)
+- [Architecture](#-architecture)
+- [Knowledge Base](#-knowledge-base)
 - [Tech Stack](#-tech-stack)
 - [Getting Started](#-getting-started)
 - [Project Structure](#-project-structure)
-- [How It Works (RAG Pipeline)](#-how-it-works-rag-pipeline)
+- [API Reference](#-api-reference)
 - [Deployment](#-deployment)
+- [Test Results](#-test-results)
 - [Roadmap](#-roadmap)
 - [Resume Summary](#-resume-summary)
-- [Author](#-author)
 
 ---
 
 ## 🔬 About the Project
 
-Rituximab (Rituxan) is one of the world's most widely prescribed biologic therapies, used to treat:
+Rituximab (Rituxan) is a biologic therapy prescribed to over **3 million patients worldwide** across:
 
-| Condition | Patients Affected |
-|-----------|------------------|
-| Non-Hodgkin Lymphoma (NHL) | ~80,000 new cases/year (US) |
-| Chronic Lymphocytic Leukemia (CLL) | ~21,000 new cases/year (US) |
-| Rheumatoid Arthritis (RA) | ~1.3 million patients (US) |
-| Multiple Sclerosis (MS) | ~1 million patients (US) |
-| Lupus & Vasculitis | ~200,000 patients (US) |
+| Condition | Global Patients |
+|-----------|----------------|
+| Non-Hodgkin Lymphoma (NHL) | ~500,000 active |
+| Chronic Lymphocytic Leukemia (CLL) | ~200,000 active |
+| Rheumatoid Arthritis (RA) | ~1.3M (US alone) |
+| Multiple Sclerosis (MS) | ~200,000 active |
+| Lupus / GPA / MPA | ~300,000 combined |
 
-Despite its widespread use, patients consistently struggle to access **timely, accurate, trustworthy information** about their therapy. This project solves that problem using **Retrieval-Augmented Generation (RAG)** — an AI architecture that retrieves answers exclusively from verified medical sources rather than generating them from memory, eliminating hallucination risk.
+Despite its widespread use, patients face a critical information gap — complex therapy, lengthy infusions, serious safety warnings, and limited access to their care team after hours. This project solves that with a production-grade **RAG (Retrieval-Augmented Generation)** assistant that answers patient questions grounded exclusively in verified medical sources.
+
+### Health check response (live)
+
+```bash
+curl https://rituximab-rag-assistant.onrender.com/health
+```
+
+```json
+{
+  "status": "ok",
+  "version": "pinecone-edition",
+  "db": "pinecone",
+  "index": "rituximab-rag",
+  "embedding": "text-embedding-3-small",
+  "model": "gpt-4o-mini"
+}
+```
+
+---
+
+## 🚀 Phase 1 Upgrades
+
+Phase 1 is a complete architectural upgrade from the original prototype:
+
+| Component | Before (Prototype) | After (Phase 1) |
+|-----------|-------------------|-----------------|
+| Vector DB | TF-IDF pickle file (1.2MB local) | **Pinecone Serverless** cloud index |
+| Embeddings | Bag-of-words keyword matching | **OpenAI text-embedding-3-small** (1536-dim) |
+| Storage | Local `.pkl` file on disk | **Pinecone AWS us-east-1** — fully managed |
+| LLM generation | Rule-based text extraction | **GPT-4o-mini** natural language generation |
+| Answer quality | Fragment extraction | Structured, cited, patient-friendly answers |
+| Web UI | Desktop-only fixed layout | **Mobile-responsive** with slide-out drawer |
+| Model switcher | Not available | GPT-4 / Claude / Local toggle in browser UI |
+| Retrieval | Lexical keyword overlap | **Semantic cosine similarity** (dense vectors) |
+| Scalability | RAM-limited local | **Serverless auto-scaling** in Pinecone cloud |
 
 ---
 
 ## 💊 How It Helps Patients
 
-### The Problem Patients Face
+### The problem
 
-> *"I got home from my infusion and had so many questions, but my oncologist's office was closed. I had no idea if what I was feeling was normal."*
-
-Patients on Rituximab therapy face real, daily challenges:
+Patients on Rituximab therapy face real daily challenges:
 
 | Challenge | Impact |
 |-----------|--------|
 | ❌ Can't reach care team after hours | Anxiety, delayed reporting of serious symptoms |
 | ❌ Unreliable internet health information | Risk of dangerous misinformation |
-| ❌ Complex medical jargon in package inserts | Patients can't understand their own treatment |
-| ❌ Fear of infusion reactions | Avoidance of treatment, non-adherence |
-| ❌ Uncertainty about drug interactions & vaccines | Potentially dangerous decisions |
+| ❌ Complex medical jargon in package inserts | Patients cannot understand their own treatment |
+| ❌ Fear of infusion reactions | Treatment avoidance, non-adherence |
+| ❌ Uncertainty about drug interactions and vaccines | Potentially dangerous decisions |
 
-### How This Assistant Solves It
+### How this assistant solves it
 
-✅ **24/7 Availability** — Patients can ask questions any time, day or night, from any device
+✅ **24/7 availability** — answers from any device, any time, day or night
 
-✅ **Source-Verified Answers** — Every response is retrieved directly from FDA labels, NIH guidelines, and clinical research — not generated from AI memory
+✅ **Source-verified answers** — every response retrieved from FDA labels, NIH, and clinical guidelines — never generated from AI memory
 
-✅ **Plain Language** — Answers are written in patient-friendly language, not medical jargon
+✅ **Plain language** — GPT-4o-mini rewrites complex medical text into clear patient-friendly answers
 
-✅ **Covers All Key Topics** — 75+ patient questions across 8 categories:
-
-```
-💊 Treatment basics      ⚠️  Side effects
-🏥 Infusion process      🛡️  Safety & risks
-📊 Monitoring            🌿 Lifestyle
-🔄 Alternatives          💙 Emotional support
-```
-
-✅ **Instant Scope Filtering** — The system only answers Rituximab-related questions, preventing dangerous off-topic medical advice
-
-✅ **Always Cites Sources** — Every answer shows exactly which document it came from (FDA Label, MedlinePlus, NCCN Guidelines, PubMed)
-
-✅ **Medical Disclaimer on Every Response** — Patients are always reminded to consult their doctor for personal medical decisions
-
-### Real Patient Questions It Answers
+✅ **Covers 75+ patient questions** across 8 categories:
 
 ```
-"What are the side effects of Rituximab?"
-"How long does my infusion take?"
-"Can I get a flu vaccine while on treatment?"
-"Is Rituximab safe during pregnancy?"
-"What is PML and should I be worried?"
-"What should I do if I get a fever?"
-"Can I drink alcohol during treatment?"
-"How will I know if it's working?"
+💊 Treatment basics       ⚠️  Side effects
+🏥 Infusion process       🛡️  Safety & risks
+📊 Monitoring             🌿 Lifestyle
+🔄 Alternatives           💙 Emotional & practical
+```
+
+✅ **Scope filtering** — only answers Rituximab-related questions, blocking off-topic medical advice
+
+✅ **Source citations** — every answer shows exactly which document it came from
+
+✅ **Medical disclaimer** — every response includes a reminder to consult their doctor
+
+### Real patient questions it answers
+
+```
+What are the side effects of Rituximab?
+How long does my infusion take?
+Can I get a flu vaccine while on Rituximab?
+Is Rituximab safe during pregnancy?
+What is PML and should I be worried?
+What should I do if I get a fever?
+Can I drink alcohol during treatment?
+How will I know if it is working?
+What is the dose for rheumatoid arthritis?
 ```
 
 ---
 
 ## 🏥 Benefits to Organisations
 
-### For Hospitals & Cancer Centres
+### Hospitals and cancer centres
 
 | Benefit | Detail |
 |---------|--------|
-| 📉 **Reduced call volume** | Routine patient questions handled automatically, freeing nursing staff for clinical work |
-| 📈 **Improved patient satisfaction** | Patients feel supported between appointments, reducing anxiety and improving trust |
-| 🔒 **Reduced liability** | All answers sourced from FDA-approved labeling with mandatory disclaimers |
-| ⏱️ **Nurse time savings** | Infusion centres report 30–50% of patient calls are routine information requests |
-| 🌍 **Extended reach** | Serves patients who cannot easily phone the clinic (language barriers, time zones, disability) |
+| 📉 Reduced call volume | Routine patient questions handled automatically 24/7 |
+| 📈 Improved patient satisfaction | Patients feel supported between appointments |
+| 🔒 Reduced liability | All answers from FDA-approved labeling with mandatory disclaimers |
+| ⏱️ Clinical staff efficiency | Frees nurses from routine information queries |
 
-### For Pharmaceutical Companies
-
-| Benefit | Detail |
-|---------|--------|
-| 💊 **Medication adherence** | Informed patients are significantly more likely to complete their treatment courses |
-| 📊 **Real-world evidence** | Aggregated anonymised query data reveals gaps in patient education materials |
-| 🤝 **Patient support programs** | Can be white-labelled as part of existing medication assistance programs |
-| 🌐 **Digital companion** | Complements existing patient portals and medication reminder apps |
-| 📋 **Label compliance** | Ensures patients receive information consistent with approved prescribing information |
-
-### For Health Insurance & Payers
+### Pharmaceutical companies
 
 | Benefit | Detail |
 |---------|--------|
-| 💰 **Cost reduction** | Improved adherence reduces hospitalisation from treatment complications |
-| 🏨 **Fewer emergency visits** | Patients who understand side effects seek care at the right level, not ER for minor symptoms |
-| 📱 **Scalable education** | One system serves thousands of patients simultaneously at near-zero marginal cost |
+| 💊 Medication adherence | Informed patients complete full treatment courses |
+| 📊 Real-world evidence | Query analytics reveal patient education gaps |
+| 🤝 Patient support programs | White-label licensing for medication assistance programs |
+| 📋 Label compliance | Information consistent with approved prescribing info |
 
-### For Healthcare Technology Companies
+### Health insurers and payers
 
 | Benefit | Detail |
 |---------|--------|
-| 🔧 **Extendable platform** | RAG architecture easily adapts to any biologic therapy (Humira, Keytruda, Herceptin) |
-| ⚖️ **Regulatory pathway** | Informational (not diagnostic) classification simplifies FDA SaMD regulatory approach |
-| 🔗 **EHR integration ready** | FastAPI backend designed for integration with Epic, Cerner, and other EHR systems |
+| 💰 Cost reduction | Improved adherence reduces hospitalisations |
+| 🏨 Fewer ER visits | Patients seek care at the right level |
+| 📱 Scalable education | Serves thousands of patients at near-zero marginal cost |
+
+### Healthcare technology companies
+
+| Benefit | Detail |
+|---------|--------|
+| 🔧 Extendable platform | RAG architecture extends to any biologic therapy |
+| ⚖️ Regulatory pathway | Informational classification simplifies FDA SaMD approach |
+| 🔗 EHR integration ready | FastAPI backend built for Epic/Cerner REST API integration |
 
 ---
 
-## 🏗️ System Architecture
+## 🏗️ Architecture
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                     PATIENT INTERFACE                        │
-│              Web UI (HTML)  ·  Terminal Chat                │
-└─────────────────────┬───────────────────────────────────────┘
-                      │
-┌─────────────────────▼───────────────────────────────────────┐
-│                    SAFETY LAYER                              │
-│         Scope Filter  ·  Disclaimer  ·  Citations           │
-└─────────────────────┬───────────────────────────────────────┘
-                      │
-┌─────────────────────▼───────────────────────────────────────┐
-│                    RAG PIPELINE                              │
-│   Query Processor → Retriever → Prompt Builder → Generator  │
-└─────────────────────┬───────────────────────────────────────┘
-                      │
-┌─────────────────────▼───────────────────────────────────────┐
-│                  KNOWLEDGE BASE                              │
-│        TF-IDF Vector Index  ·  1,019 Chunks  ·  1.2 MB      │
-└─────────────────────┬───────────────────────────────────────┘
-                      │
-┌─────────────────────▼───────────────────────────────────────┐
-│                  DATA SOURCES                                │
-│   FDA Label  ·  PubMed  ·  NCCN  ·  MedlinePlus  ·  Trials │
-└─────────────────────────────────────────────────────────────┘
+┌──────────────────────────────────────────────────────────────┐
+│                    1 · DATA SOURCES                          │
+│   FDA Label · PubMed (50 papers) · NCCN · MedlinePlus       │
+│                    ClinicalTrials.gov · OpenFDA              │
+└────────────────────────┬─────────────────────────────────────┘
+                         │  7 documents → 1,019 chunks
+┌────────────────────────▼─────────────────────────────────────┐
+│                  2 · INGESTION PIPELINE                      │
+│   PDF loader → Text chunker (512 chars) → OpenAI embeddings  │
+│         → Pinecone upsert (1536-dim, 50 per batch)           │
+└────────────────────────┬─────────────────────────────────────┘
+                         │  1,019 dense vectors
+┌────────────────────────▼─────────────────────────────────────┐
+│              3 · PINECONE VECTOR DATABASE                    │
+│   Index: rituximab-rag · Serverless · AWS us-east-1          │
+│   Dimension: 1536 · Metric: cosine · Namespace: rituximab    │
+└────────────────────────┬─────────────────────────────────────┘
+                         │  query-time retrieval
+┌────────────────────────▼─────────────────────────────────────┐
+│                  4 · RAG PIPELINE                            │
+│   Query → scope guard → embed → Pinecone top-5 → GPT-4      │
+│         prompt builder → answer generation                   │
+└────────────────────────┬─────────────────────────────────────┘
+                         │
+┌────────────────────────▼─────────────────────────────────────┐
+│                  5 · SAFETY LAYER                            │
+│   30-keyword scope filter · Medical disclaimer               │
+│           Source citations · Confidence score                │
+└────────────────────────┬─────────────────────────────────────┘
+                         │
+┌────────────────────────▼─────────────────────────────────────┐
+│                6 · PATIENT INTERFACE                         │
+│   Mobile-responsive HTML5 chat · FastAPI / Uvicorn           │
+│       Model switcher (GPT-4 / Claude / Local)                │
+│              Deployed live on Render.com                     │
+└──────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## 📚 Knowledge Base & Data Sources
+## 📚 Knowledge Base
 
-All documents are sourced from **free, publicly available** official medical databases.
+All documents sourced from **free, publicly available** official medical databases:
 
-| Source | Type | Chunks | Access |
-|--------|------|--------|--------|
-| FDA Rituxan Prescribing Label (PDF) | FDA Label | 410 | Free — accessdata.fda.gov |
-| PubMed Research Abstracts (50 papers) | Research | 551 | Free — NCBI E-utilities API |
-| NCCN Clinical Guidelines | Clinical Guidelines | 5 | Free with registration — nccn.org |
-| MedlinePlus Patient Education | Patient Education | 5 | Free — medlineplus.gov |
-| ClinicalTrials.gov Summaries | Clinical Trials | 45 | Free — clinicaltrials.gov API |
-| OpenFDA Adverse Events | Safety Data | 3 | Free — api.fda.gov |
-| **Total** | | **1,019 chunks** | |
-
----
-
-## ✨ Features
-
-- 🔍 **Semantic retrieval** — TF-IDF cosine similarity search across 1,019 medical document chunks
-- 🛡️ **Scope guard** — Blocks non-Rituximab questions with 30+ keyword triggers
-- 📚 **Source citations** — Every answer shows which official document it came from
-- ⚠️ **Safety disclaimer** — Medical disclaimer attached to every response
-- 💬 **Web chat UI** — Dark-themed, mobile-friendly browser interface
-- 🖥️ **Terminal interface** — Coloured CLI chat with session history logging
-- 🌐 **REST API** — FastAPI backend ready for EHR/portal integration
-- 📊 **Confidence scoring** — Relevance score shown for every retrieved answer
-- 🔄 **Session logging** — All conversations saved to JSON for analysis
-- 🚀 **Free deployment** — Runs on Render.com free tier
+| Document | Source | Category | Chunks | Pinecone Scores |
+|----------|--------|----------|--------|-----------------|
+| FDA Rituxan Prescribing Label (PDF) | accessdata.fda.gov | fda_label | 410 | 0.55 – 0.75 |
+| PubMed Research Abstracts (50 papers) | NCBI E-utilities API | research_abstracts | 551 | 0.60 – 0.78 |
+| NCCN Clinical Guidelines | nccn.org | clinical_guidelines | 5 | 0.52 – 0.68 |
+| MedlinePlus Patient Education | medlineplus.gov | patient_education | 5 | 0.60 – 0.72 |
+| ClinicalTrials.gov Summaries | clinicaltrials.gov | clinical_trials | 45 | 0.48 – 0.65 |
+| OpenFDA Adverse Events | api.fda.gov | adverse_events | 3 | 0.50 – 0.62 |
+| **Total** | | **6 categories** | **1,019** | |
 
 ---
 
 ## 🛠️ Tech Stack
 
 ```
-Language        Python 3.9 · JavaScript (ES6)
-RAG Engine      TF-IDF Vectorisation · Cosine Similarity · Top-K Retrieval
-Document        PyPDF · JSON parser · Text chunker (512 chars, 80 overlap)
-Storage         Pickle index · JSON chunks · Local filesystem
-Web Framework   FastAPI · Uvicorn
-Frontend        HTML5 · CSS3 · Vanilla JavaScript
-Deployment      Render.com · GitHub Actions
-Data Sources    FDA · NIH/PubMed · NCCN · MedlinePlus · ClinicalTrials.gov
+Language          Python 3.9  ·  JavaScript ES6
+Vector DB         Pinecone Serverless  ·  rituximab-rag index
+Embeddings        OpenAI text-embedding-3-small  ·  1536 dimensions
+LLM               GPT-4o-mini  (Anthropic Claude as alternative)
+Document          PyPDF  ·  JSON parser  ·  Text chunker
+Web Framework     FastAPI  ·  Uvicorn ASGI
+Frontend          HTML5  ·  CSS3  ·  Vanilla JS  ·  Mobile-responsive
+Deployment        Render.com  ·  GitHub CI/CD
+Version control   Git  ·  GitHub
 ```
 
 ---
@@ -222,64 +260,89 @@ Data Sources    FDA · NIH/PubMed · NCCN · MedlinePlus · ClinicalTrials.gov
 ### Prerequisites
 
 - Python 3.9+
-- pip3
-- ~50 MB disk space
+- Pinecone account — free at [app.pinecone.io](https://app.pinecone.io)
+- OpenAI API key — [platform.openai.com](https://platform.openai.com)
 
-### 1. Clone the repository
+### 1 — Clone the repository
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/rituximab-rag-assistant.git
+git clone https://github.com/raju-AI-portfolio/rituximab-rag-assistant.git
 cd rituximab-rag-assistant
 ```
 
-### 2. Install dependencies
+### 2 — Install dependencies
 
 ```bash
 pip3 install -r requirements.txt
 ```
 
-### 3. Set up data directories
+### 3 — Configure environment variables
+
+```bash
+cp .env.example .env
+nano .env
+```
+
+Fill in your keys:
+
+```env
+PINECONE_API_KEY=your_pinecone_key_here
+OPENAI_API_KEY=your_openai_key_here
+AI_PROVIDER=openai
+OPENAI_MODEL=gpt-4o-mini
+EMBEDDING_MODEL=text-embedding-3-small
+PINECONE_INDEX_NAME=rituximab-rag
+PINECONE_NAMESPACE=rituximab
+TOP_K_RESULTS=5
+```
+
+### 4 — Set up data folders
 
 ```bash
 mkdir -p data/raw data/processed data/chroma_db
 ```
 
-### 4. Download source documents
+### 5 — Download source documents
 
 ```bash
 python3 src/ingestion/step1_download.py
 ```
 
-Or create documents manually — see [Data Sources](#-knowledge-base--data-sources).
-
-### 5. Process and chunk documents
+### 6 — Process and chunk documents
 
 ```bash
 python3 src/ingestion/step2_process.py
 ```
 
-### 6. Build the vector index
+Expected output: `1,019 chunks saved`
+
+### 7 — Build the Pinecone index (one-time setup, ~60 seconds)
 
 ```bash
-python3 src/ingestion/step3_vectordb.py
+python3 src/ingestion/step3_pinecone.py
 ```
 
-### 7. Test the RAG pipeline
-
-```bash
-python3 src/retrieval/step4_rag_pipeline.py
+Expected output:
+```
+Pinecone : OK
+OpenAI   : OK
+Creating index 'rituximab-rag' (dim=1536, AWS us-east-1)...
+Waiting......... ready!
+Upserting [████████████████████] 1019/1019
+Upserted 1019 vectors to 'rituximab-rag'
+Vectors: 1019
 ```
 
-### 8. Launch the terminal chat
+### 8 — Test the RAG pipeline
 
 ```bash
-python3 src/interface/chat.py
+python3 src/retrieval/step4_rag_pinecone.py
 ```
 
-### 9. Launch the web server
+### 9 — Launch the web app
 
 ```bash
-uvicorn app:app --reload
+python3 -m uvicorn app:app --reload
 ```
 
 Open your browser at `http://localhost:8000`
@@ -291,134 +354,181 @@ Open your browser at `http://localhost:8000`
 ```
 rituximab_rag/
 │
-├── app.py                          # FastAPI web server
-├── requirements.txt                # Python dependencies
-├── render.yaml                     # Render deployment config
-├── web_ui.html                     # Browser chat interface
+├── app.py                              # FastAPI web server
+├── web_ui_v2.html                      # Mobile-responsive chat UI (Phase 1)
+├── web_ui.html                         # Original chat UI (Phase 0)
+├── requirements.txt                    # Python dependencies
+├── render.yaml                         # Render deployment config
+├── .env.example                        # Environment variable template
+├── .gitignore                          # Excludes .env, data/, .DS_Store
 │
 ├── src/
 │   ├── ingestion/
-│   │   ├── step1_download.py       # Download documents from APIs
-│   │   ├── step2_process.py        # Clean, chunk, categorise
-│   │   └── step3_vectordb.py       # Build TF-IDF vector index
+│   │   ├── step1_download.py           # Download documents from APIs
+│   │   ├── step2_process.py            # Clean, chunk, categorise docs
+│   │   ├── step3_pinecone.py           # Build Pinecone dense index (Phase 1)
+│   │   └── step3_vectordb.py           # TF-IDF fallback index (Phase 0)
 │   │
 │   ├── retrieval/
-│   │   └── step4_rag_pipeline.py   # Core RAG query engine
+│   │   ├── step4_rag_pinecone.py       # RAG pipeline — Pinecone edition (Phase 1)
+│   │   └── step4_rag_pipeline.py       # RAG pipeline — TF-IDF edition (Phase 0)
 │   │
 │   └── interface/
-│       └── chat.py                 # Terminal chat UI
+│       └── chat.py                     # Terminal chat interface
 │
-├── data/
-│   ├── raw/                        # Source documents (PDF, TXT, JSON)
-│   ├── processed/
-│   │   └── rituximab_chunks.json   # 1,019 processed chunks
-│   ├── chroma_db/
-│   │   └── rituximab_index.pkl     # TF-IDF vector index (1.2 MB)
-│   └── chat_history.json           # Session logs
-│
-└── config/
-    └── .env.example                # Environment variables template
+└── data/
+    ├── raw/                            # Source documents (PDF, TXT, JSON)
+    │   ├── FDA Rituxan Label.pdf
+    │   ├── fda_label_rituxan.txt
+    │   ├── medlineplus_rituximab.txt
+    │   ├── nccn_guidelines_rituximab.txt
+    │   ├── pubmed_abstracts.txt
+    │   ├── clinical_trials.json
+    │   └── adverse_events.json
+    ├── processed/
+    │   └── rituximab_chunks.json       # 1,019 processed chunks
+    └── chroma_db/
+        └── rituximab_index.pkl         # TF-IDF fallback index
 ```
 
 ---
 
-## ⚙️ How It Works (RAG Pipeline)
+## 📡 API Reference
 
+### `GET /`
+
+Returns the HTML5 chat interface.
+
+### `GET /health`
+
+Returns system status and configuration.
+
+**Response:**
+```json
+{
+  "status": "ok",
+  "version": "pinecone-edition",
+  "db": "pinecone",
+  "index": "rituximab-rag",
+  "embedding": "text-embedding-3-small",
+  "model": "gpt-4o-mini"
+}
 ```
-Patient Question
-      │
-      ▼
-┌─────────────┐
-│   Scope     │  Is this a Rituximab-related question?
-│   Check     │  If NO → polite redirect to doctor
-└──────┬──────┘
-       │ YES
-       ▼
-┌─────────────┐
-│   Query     │  Expand abbreviations (RA, NHL, CLL)
-│  Processor  │  Normalise and clean input
-└──────┬──────┘
-       │
-       ▼
-┌─────────────┐
-│  TF-IDF     │  Compute cosine similarity against 1,019 chunks
-│  Retrieval  │  Return top-5 most relevant (max 2 per source)
-└──────┬──────┘
-       │
-       ▼
-┌─────────────┐
-│   Prompt    │  Combine patient question + retrieved chunks
-│   Builder   │  Apply source priority: FDA > Patient Ed > Guidelines
-└──────┬──────┘
-       │
-       ▼
-┌─────────────┐
-│   Answer    │  Generate clear, structured response
-│ Generation  │  Attach source citations + medical disclaimer
-└──────┬──────┘
-       │
-       ▼
-  Patient receives cited, safe, source-verified answer
+
+### `POST /ask`
+
+Accepts a patient query and returns a RAG-generated answer.
+
+**Request:**
+```json
+{
+  "query": "What are the side effects of Rituximab?"
+}
+```
+
+**Response:**
+```json
+{
+  "query": "What are the side effects of Rituximab?",
+  "in_scope": true,
+  "answer": "According to the FDA prescribing label, the most common side effects of Rituximab include infusion-related reactions (fever, chills, nausea), increased risk of infections, fatigue, headache, and low blood cell counts...",
+  "sources": ["FDA Rituxan Label.pdf", "medlineplus_rituximab.txt"],
+  "model": "gpt-4o-mini",
+  "score": 0.752,
+  "db_type": "pinecone"
+}
 ```
 
 ---
 
 ## 🌐 Deployment
 
-### Deploy to Render (Free)
+### Deploy to Render (free)
 
-1. Fork this repository
+1. Fork this repository on GitHub
 2. Go to [render.com](https://render.com) and sign up with GitHub
-3. Click **New +** → **Web Service**
-4. Connect your forked repository
-5. Render auto-detects settings from `render.yaml`
-6. Add environment variable: `PYTHON_VERSION` = `3.9.6`
-7. Click **Create Web Service**
+3. Click **New +** → **Web Service** → connect your fork
+4. Render auto-detects settings from `render.yaml`
+5. Add environment variables in the **Environment** tab:
 
-Your app will be live at:
-```
-https://rituximab-rag-assistant.onrender.com
+| Key | Value |
+|-----|-------|
+| `PINECONE_API_KEY` | your Pinecone key |
+| `OPENAI_API_KEY` | your OpenAI key |
+| `PINECONE_INDEX_NAME` | `rituximab-rag` |
+| `PINECONE_NAMESPACE` | `rituximab` |
+| `EMBEDDING_MODEL` | `text-embedding-3-small` |
+| `AI_PROVIDER` | `openai` |
+| `OPENAI_MODEL` | `gpt-4o-mini` |
+
+6. Click **Save Changes** — Render auto-redeploys in 2–3 minutes
+
+### render.yaml
+
+```yaml
+services:
+  - type: web
+    name: rituximab-rag-assistant
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app:app --host 0.0.0.0 --port $PORT
+    plan: free
 ```
 
-### Deploy locally with Docker (optional)
+---
 
-```bash
-docker build -t rituximab-rag .
-docker run -p 8000:8000 rituximab-rag
-```
+## 🧪 Test Results
+
+Live test results from the deployed Pinecone + GPT-4 pipeline:
+
+| Patient Question | Top Source | Score | Model | Result |
+|-----------------|------------|-------|-------|--------|
+| What are the side effects of Rituximab? | FDA Label | 0.752 | gpt-4o-mini | ✅ Relevant |
+| How long does a Rituximab infusion take? | MedlinePlus | 0.718 | gpt-4o-mini | ✅ Relevant |
+| Can I get a flu vaccine while on Rituximab? | FDA Label | 0.622 | gpt-4o-mini | ✅ Relevant |
+| Is Rituximab safe during pregnancy? | FDA Label | 0.694 | gpt-4o-mini | ✅ Relevant |
+| What is the dose for rheumatoid arthritis? | FDA Label | 0.560 | gpt-4o-mini | ✅ Relevant |
+| What is PML and should I be worried? | FDA Label | 0.731 | gpt-4o-mini | ✅ Relevant |
+| Can I eat pizza? *(out-of-scope)* | N/A | N/A | scope-filter | ✅ Blocked |
 
 ---
 
 ## 🗺️ Roadmap
 
-### Phase 1 — Near Term
-- [ ] Integrate OpenAI GPT-4 for higher-quality answer generation
-- [ ] Upgrade to dense embeddings (text-embedding-3-small) + ChromaDB
-- [ ] Add Hindi and Telugu language support
-- [ ] Improve mobile responsiveness
+### ✅ Phase 1 — Complete
+- [x] Pinecone Serverless vector database
+- [x] OpenAI text-embedding-3-small dense embeddings
+- [x] GPT-4o-mini answer generation
+- [x] Mobile-responsive web UI with model switcher
+- [x] Live deployment on Render.com with CI/CD
 
-### Phase 2 — Mid Term
-- [ ] EHR integration (Epic, Cerner)
+### Phase 2 — Near Term
+- [ ] Multilingual support (Hindi, Telugu)
+- [ ] EHR integration (Epic, Cerner) via FHIR REST API
 - [ ] Voice interface for elderly patients
-- [ ] Nurse analytics dashboard
-- [ ] Automated FDA feed updates
+- [ ] Automated knowledge base refresh from FDA RSS feeds
 
 ### Phase 3 — Long Term
 - [ ] Expand to all biologic therapies (Humira, Keytruda, Herceptin)
-- [ ] FDA SaMD regulatory pathway
-- [ ] Clinical validation study
-- [ ] Hospital white-label licensing
+- [ ] FDA Software as a Medical Device (SaMD) regulatory pathway
+- [ ] Clinical validation study with a patient cohort
+- [ ] Hospital white-label licensing model
 
 ---
 
+## 📄 Resume Summary
+
+**Technical:**
+> Designed and deployed a production-grade Rituximab therapy RAG assistant using Pinecone serverless vector database, OpenAI text-embedding-3-small dense embeddings (1536-dim), and GPT-4o-mini answer generation — indexing 1,019 medical chunks from FDA, NIH, NCCN, and PubMed sources, deployed live on Render.com with GitHub CI/CD.
+
 **Impact:**
-> domain-specific RAG-based clinical assistant for Rituximab therapy, enabling patients to access structured, source-verified drug information across oncology, rheumatology, and neurology use cases.
+> Built an AI patient knowledge assistant enabling 24/7 access to source-verified Rituximab therapy information across oncology, rheumatology, and neurology use cases, with full safety guardrails, source citations, and medical disclaimers on every response.
 
 ---
 
 ## ⚠️ Medical Disclaimer
 
-This application is for **educational purposes only**. It is not a substitute for professional medical advice, diagnosis, or treatment. Always consult your doctor, pharmacist, or healthcare provider for medical decisions. In case of emergency, call your local emergency services immediately.
+This application is for **educational purposes only**. It is not a substitute for professional medical advice, diagnosis, or treatment. Always consult your doctor or healthcare provider before making any medical decisions. In case of emergency call your local emergency services immediately.
 
 ---
 
@@ -432,14 +542,14 @@ This project is licensed under the MIT License — see the [LICENSE](LICENSE) fi
 
 **Raju Kumar**
 
-- GitHub: [@rajukumar](https://github.com/rajukumar)
-- Project: [Rituximab RAG Assistant](https://github.com/rajukumar/rituximab-rag-assistant)
+- Live app: [rituximab-rag-assistant.onrender.com](https://rituximab-rag-assistant.onrender.com)
+- GitHub: [github.com/raju-AI-portfolio/rituximab-rag-assistant](https://github.com/raju-AI-portfolio/rituximab-rag-assistant)
 
 ---
 
 <div align="center">
 
-Built with ❤️ using **RAG · FDA · NIH · NCCN · PubMed · FastAPI · Render**
+Built with ❤️ using **Pinecone · OpenAI GPT-4 · FastAPI · Render · FDA · NIH · NCCN · PubMed**
 
 *Helping patients understand their therapy — one question at a time* 🧬
 
