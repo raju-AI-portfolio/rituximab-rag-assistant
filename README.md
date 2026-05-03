@@ -53,23 +53,6 @@ Rituximab (Rituxan) is a biologic therapy prescribed to over **3 million patient
 
 Despite its widespread use, patients face a critical information gap — complex therapy, lengthy infusions, serious safety warnings, and limited access to their care team after hours. This project solves that with a production-grade **RAG (Retrieval-Augmented Generation)** assistant that answers patient questions grounded exclusively in verified medical sources.
 
-### Health check response (live)
-
-```bash
-curl https://rituximab-rag-assistant.onrender.com/health
-```
-
-```json
-{
-  "status": "ok",
-  "version": "pinecone-edition",
-  "db": "pinecone",
-  "index": "rituximab-rag",
-  "embedding": "text-embedding-3-small",
-  "model": "gpt-4o-mini"
-}
-```
-
 ---
 
 ## 🚀 Phase 1 Upgrades
