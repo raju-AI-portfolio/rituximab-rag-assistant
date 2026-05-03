@@ -17,6 +17,7 @@
 
 </div>
 
+**Deployed on Render- live Demo: https://rituximab-rag-assistant.onrender.com/**
 ---
 
 ## 📋 Table of Contents
@@ -181,6 +182,9 @@ What is the dose for rheumatoid arthritis?
 ---
 
 ## 🏗️ Architecture
+
+<img width="468" height="541" alt="image" src="https://github.com/user-attachments/assets/d741ecce-4a12-4510-aca1-86085d5207ce" />
+
 
 ```
 ┌──────────────────────────────────────────────────────────────┐
@@ -516,15 +520,6 @@ Live test results from the deployed Pinecone + GPT-4 pipeline:
 
 ---
 
-## 📄 Resume Summary
-
-**Technical:**
-> Designed and deployed a production-grade Rituximab therapy RAG assistant using Pinecone serverless vector database, OpenAI text-embedding-3-small dense embeddings (1536-dim), and GPT-4o-mini answer generation — indexing 1,019 medical chunks from FDA, NIH, NCCN, and PubMed sources, deployed live on Render.com with GitHub CI/CD.
-
-**Impact:**
-> Built an AI patient knowledge assistant enabling 24/7 access to source-verified Rituximab therapy information across oncology, rheumatology, and neurology use cases, with full safety guardrails, source citations, and medical disclaimers on every response.
-
----
 
 ## ⚠️ Medical Disclaimer
 
