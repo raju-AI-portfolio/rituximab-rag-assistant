@@ -1,4 +1,3 @@
-
 import os,re,math,pickle
 from pathlib import Path
 from collections import defaultdict
@@ -15,6 +14,9 @@ EMBEDDING_MODEL=os.getenv("EMBEDDING_MODEL","text-embedding-3-small")
 INDEX_NAME=os.getenv("PINECONE_INDEX_NAME","rituximab-rag")
 NAMESPACE=os.getenv("PINECONE_NAMESPACE","rituximab")
 TOP_K=int(os.getenv("TOP_K_RESULTS","5"))
+AZURE_SEARCH_ENDPOINT=os.getenv("AZURE_SEARCH_ENDPOINT","")
+AZURE_SEARCH_KEY=os.getenv("AZURE_SEARCH_KEY","")
+AZURE_SEARCH_INDEX=os.getenv("AZURE_SEARCH_INDEX","rituximab-index")
 DISCLAIMER="\n\n Educational only. Always consult your doctor."
 SCOPE_KEYWORDS=["rituximab","rituxan","infusion","cd20","lymphoma","leukemia",
     "rheumatoid","arthritis","side effect","dose","dosage","vaccine","pregnancy",
@@ -25,6 +27,10 @@ SYSTEM_PROMPT=("You are a compassionate medical assistant specialising in Rituxi
     "Never diagnose. Cite your source. For serious symptoms advise contacting doctor.")
 
 def load_index():
+    has_azure=bool(AZURE_SEARCH_ENDPOINT and AZURE_SEARCH_KEY)
+    if has_azure:
+        print(f"  Azure AI Search connected - index '{AZURE_SEARCH_INDEX}'")
+        return {"type":"azure_search"}
     has_pc=bool(PINECONE_API_KEY and "your_" not in PINECONE_API_KEY)
     has_oai=bool(OPENAI_API_KEY and "your_" not in OPENAI_API_KEY)
     if has_pc and has_oai:
@@ -39,7 +45,6 @@ def load_index():
             print(f"  Pinecone failed: {e} - using TF-IDF")
     pkl=DB_DIR/"rituximab_index.pkl"
     if pkl.exists():
-        import pickle
         with open(pkl,"rb") as f: db=pickle.load(f)
         print(f"  TF-IDF loaded - {len(db['chunks'])} chunks")
         return db
@@ -58,7 +63,28 @@ def embed_query(text):
     return OpenAI(api_key=OPENAI_API_KEY).embeddings.create(
         model=EMBEDDING_MODEL,input=[text]).data[0].embedding
 
+def retrieve_azure_search(query):
+    from azure.search.documents import SearchClient
+    from azure.search.documents.models import VectorizedQuery
+    from azure.core.credentials import AzureKeyCredential
+    q_vec=embed_query(query)
+    client=SearchClient(AZURE_SEARCH_ENDPOINT,AZURE_SEARCH_INDEX,
+                        AzureKeyCredential(AZURE_SEARCH_KEY))
+    vector_query=VectorizedQuery(vector=q_vec,k_nearest_neighbors=TOP_K,
+                                 fields="embedding")
+    results=client.search(search_text=None,vector_queries=[vector_query],
+                          select=["text","source","category"])
+    return [{"text":r["text"],"source":r["source"],
+             "category":r["category"],"score":round(r["@search.score"],4)}
+            for r in results]
+
 def retrieve(query,idx_obj):
+    if idx_obj["type"]=="azure_search":
+        try:
+            return retrieve_azure_search(query)
+        except Exception as e:
+            print(f"  Azure Search failed: {e} - falling back to Pinecone")
+            idx_obj["type"]="pinecone"
     results=[]
     if idx_obj["type"]=="pinecone":
         q_vec=embed_query(query)
@@ -176,7 +202,7 @@ def ask(query,idx_obj):
 
 if __name__=="__main__":
     print("="*56)
-    print("  Step 4: RAG Pipeline (Pinecone Edition)")
+    print("  Step 4: RAG Pipeline (Azure AI Search Edition)")
     print("="*56+"\n")
     print("Loading index...",end="",flush=True)
     idx_obj=load_index()
@@ -194,4 +220,4 @@ if __name__=="__main__":
         else:
             print(f"A: {r['answer'][:280]}...")
             print(f"\n   DB: {r['db_type']} | Model: {r['model']} | Score: {r['score']:.3f}")
-    print(f"\n{'='*56}\n  Pinecone RAG Pipeline working!\n{'='*56}")
+    print(f"\n{'='*56}\n  Azure AI Search RAG Pipeline working!\n{'='*56}")

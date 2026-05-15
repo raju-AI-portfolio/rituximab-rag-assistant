@@ -7,3 +7,4 @@ pypdf==4.3.1
 requests==2.32.3
 tiktoken==0.7.0
 gunicorn
+azure-search-documents
