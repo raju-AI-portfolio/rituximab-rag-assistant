@@ -99,11 +99,25 @@ def build_prompt(query,retrieved):
 
 def generate_openai(prompt):
     try:
-        from openai import OpenAI
-        r=OpenAI(api_key=OPENAI_API_KEY).chat.completions.create(
-            model=OPENAI_MODEL,messages=[{"role":"user","content":prompt}],
-            temperature=0.3,max_tokens=600)
-        return r.choices[0].message.content,OPENAI_MODEL
+        azure_endpoint=os.getenv("AZURE_OPENAI_ENDPOINT","")
+        azure_key=os.getenv("AZURE_OPENAI_KEY","")
+        azure_deployment=os.getenv("AZURE_OPENAI_DEPLOYMENT","gpt-4o")
+        if azure_endpoint and azure_key:
+            from openai import AzureOpenAI
+            r=AzureOpenAI(
+                azure_endpoint=azure_endpoint,
+                api_key=azure_key,
+                api_version="2024-08-01-preview"
+            ).chat.completions.create(
+                model=azure_deployment,
+                messages=[{"role":"user","content":prompt}],
+                temperature=0.3,max_tokens=600)
+        else:
+            from openai import OpenAI
+            r=OpenAI(api_key=OPENAI_API_KEY).chat.completions.create(
+                model=OPENAI_MODEL,messages=[{"role":"user","content":prompt}],
+                temperature=0.3,max_tokens=600)
+        return r.choices[0].message.content,azure_deployment if azure_endpoint else OPENAI_MODEL
     except Exception as e: return None,str(e)
 
 def generate_anthropic(prompt):
