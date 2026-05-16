@@ -2,28 +2,29 @@
 
 # 🧬 Rituximab Patient Knowledge Assistant
 
-### Phase 1 — Production Release
+### Phase 2 — Azure-Native Production Release
 
-**AI-powered RAG system for Rituximab therapy patient education**
+**Fully Azure-native RAG system for Rituximab therapy patient education**
 
-[![Live Demo](https://img.shields.io/badge/Live%20Demo-Render.com-28a745?style=for-the-badge&logo=render&logoColor=white)](https://rituximab-rag-assistant.onrender.com)
-[![Python](https://img.shields.io/badge/Python-3.9-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
-[![Pinecone](https://img.shields.io/badge/Pinecone-Serverless-000000?style=for-the-badge&logo=pinecone&logoColor=white)](https://pinecone.io)
-[![OpenAI](https://img.shields.io/badge/GPT--4o--mini-OpenAI-412991?style=for-the-badge&logo=openai&logoColor=white)](https://openai.com)
+[![Azure Live Demo](https://img.shields.io/badge/Live%20Demo-Azure%20App%20Service-0078D4?style=for-the-badge&logo=microsoftazure&logoColor=white)](https://rituximab-rag-fmgvg6aravebatbz.centralindia-01.azurewebsites.net)
+[![Render Demo](https://img.shields.io/badge/Also%20on-Render.com-28a745?style=for-the-badge&logo=render&logoColor=white)](https://rituximab-rag-assistant.onrender.com)
+[![Python](https://img.shields.io/badge/Python-3.11-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
+[![Azure OpenAI](https://img.shields.io/badge/Azure%20OpenAI-GPT--4o-0078D4?style=for-the-badge&logo=microsoftazure&logoColor=white)](https://azure.microsoft.com/en-us/products/ai-services/openai-service)
+[![Azure AI Search](https://img.shields.io/badge/Azure%20AI%20Search-Vector%20DB-0078D4?style=for-the-badge&logo=microsoftazure&logoColor=white)](https://azure.microsoft.com/en-us/products/ai-services/ai-search)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.112-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
+[![GitHub Actions](https://img.shields.io/badge/CI%2FCD-GitHub%20Actions-2088FF?style=for-the-badge&logo=githubactions&logoColor=white)](https://github.com/features/actions)
 [![License](https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge)](LICENSE)
 
 *Helping patients understand their Rituximab therapy — 24/7, grounded in FDA, NIH, NCCN and PubMed*
 
 </div>
 
-**Deployed on Render- live Demo: https://rituximab-rag-assistant.onrender.com/**
 ---
 
 ## 📋 Table of Contents
 
 - [About the Project](#-about-the-project)
-- [Phase 1 Upgrades](#-phase-1-upgrades)
+- [Phase 2 Upgrades — Azure Native](#-phase-2-upgrades--azure-native)
 - [How It Helps Patients](#-how-it-helps-patients)
 - [Benefits to Organisations](#-benefits-to-organisations)
 - [Architecture](#-architecture)
@@ -53,23 +54,35 @@ Rituximab (Rituxan) is a biologic therapy prescribed to over **3 million patient
 
 Despite its widespread use, patients face a critical information gap — complex therapy, lengthy infusions, serious safety warnings, and limited access to their care team after hours. This project solves that with a production-grade **RAG (Retrieval-Augmented Generation)** assistant that answers patient questions grounded exclusively in verified medical sources.
 
+Now deployed on **Microsoft Azure** — the same enterprise cloud infrastructure used by leading pharmaceutical companies including Novartis, Roche, and Pfizer.
+
 ---
 
-## 🚀 Phase 1 Upgrades
+## 🚀 Phase 2 Upgrades — Azure Native
 
-Phase 1 is a complete architectural upgrade from the original prototype:
+Phase 2 migrates the entire stack to Microsoft Azure, replacing all third-party services with Azure-native equivalents:
 
-| Component | Before (Prototype) | After (Phase 1) |
-|-----------|-------------------|-----------------|
-| Vector DB | TF-IDF pickle file (1.2MB local) | **Pinecone Serverless** cloud index |
-| Embeddings | Bag-of-words keyword matching | **OpenAI text-embedding-3-small** (1536-dim) |
-| Storage | Local `.pkl` file on disk | **Pinecone AWS us-east-1** — fully managed |
-| LLM generation | Rule-based text extraction | **GPT-4o-mini** natural language generation |
-| Answer quality | Fragment extraction | Structured, cited, patient-friendly answers |
-| Web UI | Desktop-only fixed layout | **Mobile-responsive** with slide-out drawer |
-| Model switcher | Not available | GPT-4 / Claude / Local toggle in browser UI |
-| Retrieval | Lexical keyword overlap | **Semantic cosine similarity** (dense vectors) |
-| Scalability | RAM-limited local | **Serverless auto-scaling** in Pinecone cloud |
+| Component | Phase 1 (Render) | Phase 2 (Azure Native) |
+|-----------|-----------------|------------------------|
+| Hosting | Render.com (free tier) | **Azure App Service** (Central India, F1) |
+| LLM | OpenAI API (direct) | **Azure OpenAI Service — GPT-4o** (50K TPM) |
+| Vector Database | Pinecone Serverless | **Azure AI Search** (vector + hybrid search) |
+| CI/CD | Render webhook | **GitHub Actions** workflow pipeline |
+| Build system | Render Oryx | **Azure Oryx** build system |
+| Web server | Uvicorn | **Gunicorn + UvicornWorker** (production-grade) |
+| Secret management | Render env vars | **Azure App Settings** (encrypted at rest) |
+| Python runtime | 3.9 | **Python 3.11** |
+| Answer quality score | 0.75 avg | **0.80+ avg** (improved retrieval) |
+| Model | GPT-4o-mini | **GPT-4o** (full model, latest version) |
+
+### Why Azure matters for pharma
+
+Azure is the cloud platform of choice for enterprise pharmaceutical companies due to:
+- **GxP-compliant infrastructure** — validated for regulated pharma workloads
+- **HIPAA BAA available** — Business Associate Agreement for healthcare data
+- **EU data residency** — data stays within Azure geography (GDPR compliance)
+- **Azure AI Foundry** — enterprise model lifecycle management
+- **Private networking** — VNet integration for sensitive clinical data
 
 ---
 
@@ -93,7 +106,7 @@ Patients on Rituximab therapy face real daily challenges:
 
 ✅ **Source-verified answers** — every response retrieved from FDA labels, NIH, and clinical guidelines — never generated from AI memory
 
-✅ **Plain language** — GPT-4o-mini rewrites complex medical text into clear patient-friendly answers
+✅ **Plain language** — GPT-4o rewrites complex medical text into clear patient-friendly answers
 
 ✅ **Covers 75+ patient questions** across 8 categories:
 
@@ -154,20 +167,11 @@ What is the dose for rheumatoid arthritis?
 | 🏨 Fewer ER visits | Patients seek care at the right level |
 | 📱 Scalable education | Serves thousands of patients at near-zero marginal cost |
 
-### Healthcare technology companies
-
-| Benefit | Detail |
-|---------|--------|
-| 🔧 Extendable platform | RAG architecture extends to any biologic therapy |
-| ⚖️ Regulatory pathway | Informational classification simplifies FDA SaMD approach |
-| 🔗 EHR integration ready | FastAPI backend built for Epic/Cerner REST API integration |
-
 ---
 
 ## 🏗️ Architecture
 
-<img width="468" height="541" alt="image" src="https://github.com/user-attachments/assets/d741ecce-4a12-4510-aca1-86085d5207ce" />
-
+### Phase 2 — Azure Native Architecture
 
 ```
 ┌──────────────────────────────────────────────────────────────┐
@@ -179,19 +183,19 @@ What is the dose for rheumatoid arthritis?
 ┌────────────────────────▼─────────────────────────────────────┐
 │                  2 · INGESTION PIPELINE                      │
 │   PDF loader → Text chunker (512 chars) → OpenAI embeddings  │
-│         → Pinecone upsert (1536-dim, 50 per batch)           │
+│         → Azure AI Search upsert (1536-dim vectors)          │
 └────────────────────────┬─────────────────────────────────────┘
                          │  1,019 dense vectors
 ┌────────────────────────▼─────────────────────────────────────┐
-│              3 · PINECONE VECTOR DATABASE                    │
-│   Index: rituximab-rag · Serverless · AWS us-east-1          │
-│   Dimension: 1536 · Metric: cosine · Namespace: rituximab    │
+│           3 · AZURE AI SEARCH (Vector Database)              │
+│   Index: rituximab-index · HNSW algorithm · 1536-dim         │
+│   Hybrid search: vector + keyword · Score: 0.80+ avg         │
 └────────────────────────┬─────────────────────────────────────┘
-                         │  query-time retrieval
+                         │  query-time vector retrieval
 ┌────────────────────────▼─────────────────────────────────────┐
 │                  4 · RAG PIPELINE                            │
-│   Query → scope guard → embed → Pinecone top-5 → GPT-4      │
-│         prompt builder → answer generation                   │
+│   Query → scope guard → embed → Azure AI Search top-5       │
+│         → prompt builder → Azure OpenAI GPT-4o              │
 └────────────────────────┬─────────────────────────────────────┘
                          │
 ┌────────────────────────▼─────────────────────────────────────┐
@@ -201,11 +205,32 @@ What is the dose for rheumatoid arthritis?
 └────────────────────────┬─────────────────────────────────────┘
                          │
 ┌────────────────────────▼─────────────────────────────────────┐
-│                6 · PATIENT INTERFACE                         │
-│   Mobile-responsive HTML5 chat · FastAPI / Uvicorn           │
-│       Model switcher (GPT-4 / Claude / Local)                │
-│              Deployed live on Render.com                     │
+│           6 · AZURE APP SERVICE (Hosting)                    │
+│   Python 3.11 · Gunicorn + UvicornWorker · Central India     │
+│   GitHub Actions CI/CD · Auto-deploy on push to main        │
+│   HTTPS · Azure-managed TLS certificate                      │
 └──────────────────────────────────────────────────────────────┘
+```
+
+### CI/CD Pipeline
+
+```
+Developer laptop
+      │
+      │  git push origin main
+      ▼
+GitHub Repository
+      │
+      │  webhook triggers GitHub Actions workflow
+      ▼
+GitHub Actions Runner
+      │  pip install -r requirements.txt
+      │  deploy via publish profile
+      ▼
+Azure App Service (Central India)
+      │  Gunicorn starts · env vars injected
+      ▼
+Live at: rituximab-rag-fmgvg6aravebatbz.centralindia-01.azurewebsites.net
 ```
 
 ---
@@ -214,14 +239,14 @@ What is the dose for rheumatoid arthritis?
 
 All documents sourced from **free, publicly available** official medical databases:
 
-| Document | Source | Category | Chunks | Pinecone Scores |
-|----------|--------|----------|--------|-----------------|
-| FDA Rituxan Prescribing Label (PDF) | accessdata.fda.gov | fda_label | 410 | 0.55 – 0.75 |
-| PubMed Research Abstracts (50 papers) | NCBI E-utilities API | research_abstracts | 551 | 0.60 – 0.78 |
-| NCCN Clinical Guidelines | nccn.org | clinical_guidelines | 5 | 0.52 – 0.68 |
-| MedlinePlus Patient Education | medlineplus.gov | patient_education | 5 | 0.60 – 0.72 |
-| ClinicalTrials.gov Summaries | clinicaltrials.gov | clinical_trials | 45 | 0.48 – 0.65 |
-| OpenFDA Adverse Events | api.fda.gov | adverse_events | 3 | 0.50 – 0.62 |
+| Document | Source | Category | Chunks | Azure AI Search Scores |
+|----------|--------|----------|--------|------------------------|
+| FDA Rituxan Prescribing Label (PDF) | accessdata.fda.gov | fda_label | 410 | 0.65 – 0.85 |
+| PubMed Research Abstracts (50 papers) | NCBI E-utilities API | research_abstracts | 551 | 0.68 – 0.82 |
+| NCCN Clinical Guidelines | nccn.org | clinical_guidelines | 5 | 0.60 – 0.75 |
+| MedlinePlus Patient Education | medlineplus.gov | patient_education | 5 | 0.65 – 0.78 |
+| ClinicalTrials.gov Summaries | clinicaltrials.gov | clinical_trials | 45 | 0.55 – 0.70 |
+| OpenFDA Adverse Events | api.fda.gov | adverse_events | 3 | 0.55 – 0.68 |
 | **Total** | | **6 categories** | **1,019** | |
 
 ---
@@ -229,15 +254,20 @@ All documents sourced from **free, publicly available** official medical databas
 ## 🛠️ Tech Stack
 
 ```
-Language          Python 3.9  ·  JavaScript ES6
-Vector DB         Pinecone Serverless  ·  rituximab-rag index
+Language          Python 3.11  ·  JavaScript ES6
+Cloud Platform    Microsoft Azure (Central India region)
+Hosting           Azure App Service  ·  Free F1 tier
+Vector DB         Azure AI Search  ·  rituximab-index  ·  HNSW algorithm
 Embeddings        OpenAI text-embedding-3-small  ·  1536 dimensions
-LLM               GPT-4o-mini  (Anthropic Claude as alternative)
+LLM               Azure OpenAI GPT-4o  ·  2024-11-20  ·  50K TPM
 Document          PyPDF  ·  JSON parser  ·  Text chunker
-Web Framework     FastAPI  ·  Uvicorn ASGI
+Web Framework     FastAPI  ·  Gunicorn + UvicornWorker
 Frontend          HTML5  ·  CSS3  ·  Vanilla JS  ·  Mobile-responsive
-Deployment        Render.com  ·  GitHub CI/CD
+CI/CD             GitHub Actions  ·  Auto-deploy on push to main
+Secret Mgmt       Azure App Settings  ·  Encrypted at rest
 Version control   Git  ·  GitHub
+Fallback DB       Pinecone Serverless  ·  rituximab-rag index
+Fallback LLM      OpenAI API direct  ·  GPT-4o-mini
 ```
 
 ---
@@ -246,9 +276,10 @@ Version control   Git  ·  GitHub
 
 ### Prerequisites
 
-- Python 3.9+
-- Pinecone account — free at [app.pinecone.io](https://app.pinecone.io)
-- OpenAI API key — [platform.openai.com](https://platform.openai.com)
+- Python 3.11+
+- Azure account — free at [portal.azure.com](https://portal.azure.com)
+- OpenAI API key — [platform.openai.com](https://platform.openai.com) (for embeddings)
+- Pinecone account (optional fallback) — [app.pinecone.io](https://app.pinecone.io)
 
 ### 1 — Clone the repository
 
@@ -270,7 +301,25 @@ cp .env.example .env
 nano .env
 ```
 
-Fill in your keys:
+#### Option A — Azure native (recommended)
+
+```env
+# Azure OpenAI
+AZURE_OPENAI_ENDPOINT=https://your-resource.cognitiveservices.azure.com/
+AZURE_OPENAI_KEY=your_azure_openai_key
+AZURE_OPENAI_DEPLOYMENT=gpt-4o
+
+# Azure AI Search
+AZURE_SEARCH_ENDPOINT=https://rituximab-search.search.windows.net
+AZURE_SEARCH_KEY=your_azure_search_key
+AZURE_SEARCH_INDEX=rituximab-index
+
+# OpenAI (for embeddings only)
+OPENAI_API_KEY=your_openai_key_here
+EMBEDDING_MODEL=text-embedding-3-small
+```
+
+#### Option B — Pinecone fallback
 
 ```env
 PINECONE_API_KEY=your_pinecone_key_here
@@ -303,21 +352,25 @@ python3 src/ingestion/step2_process.py
 
 Expected output: `1,019 chunks saved`
 
-### 7 — Build the Pinecone index (one-time setup, ~60 seconds)
+### 7A — Build Azure AI Search index (Phase 2)
 
 ```bash
-python3 src/ingestion/step3_pinecone.py
+python3 upload_to_azure_search.py
 ```
 
 Expected output:
 ```
-Pinecone : OK
-OpenAI   : OK
-Creating index 'rituximab-rag' (dim=1536, AWS us-east-1)...
-Waiting......... ready!
-Upserting [████████████████████] 1019/1019
-Upserted 1019 vectors to 'rituximab-rag'
-Vectors: 1019
+Connecting to Pinecone...
+Fetching vector IDs from Pinecone...
+  Found 1019 vectors
+  ...
+Done! 1019 documents uploaded to Azure AI Search!
+```
+
+### 7B — Build the Pinecone index (Phase 1 fallback)
+
+```bash
+python3 src/ingestion/step3_pinecone.py
 ```
 
 ### 8 — Test the RAG pipeline
@@ -344,8 +397,12 @@ rituximab_rag/
 ├── app.py                              # FastAPI web server
 ├── web_ui_v2.html                      # Mobile-responsive chat UI (Phase 1)
 ├── web_ui.html                         # Original chat UI (Phase 0)
-├── requirements.txt                    # Python dependencies
-├── render.yaml                         # Render deployment config
+├── requirements.txt                    # Python dependencies (incl. gunicorn, azure-search-documents)
+├── render.yaml                         # Render deployment config (Phase 1 fallback)
+├── upload_to_azure_search.py           # Script to upload vectors to Azure AI Search
+├── .github/
+│   └── workflows/
+│       └── main_rituximab-rag.yml      # GitHub Actions CI/CD workflow for Azure
 ├── .env.example                        # Environment variable template
 ├── .gitignore                          # Excludes .env, data/, .DS_Store
 │
@@ -357,7 +414,7 @@ rituximab_rag/
 │   │   └── step3_vectordb.py           # TF-IDF fallback index (Phase 0)
 │   │
 │   ├── retrieval/
-│   │   ├── step4_rag_pinecone.py       # RAG pipeline — Pinecone edition (Phase 1)
+│   │   ├── step4_rag_pinecone.py       # RAG pipeline — Azure AI Search + Azure OpenAI (Phase 2)
 │   │   └── step4_rag_pipeline.py       # RAG pipeline — TF-IDF edition (Phase 0)
 │   │
 │   └── interface/
@@ -390,7 +447,7 @@ Returns the HTML5 chat interface.
 
 Returns system status and configuration.
 
-**Response:**
+**Response (Phase 2 — Azure):**
 ```json
 {
   "status": "ok",
@@ -413,16 +470,16 @@ Accepts a patient query and returns a RAG-generated answer.
 }
 ```
 
-**Response:**
+**Response (Phase 2 — Azure AI Search + GPT-4o):**
 ```json
 {
   "query": "What are the side effects of Rituximab?",
   "in_scope": true,
-  "answer": "According to the FDA prescribing label, the most common side effects of Rituximab include infusion-related reactions (fever, chills, nausea), increased risk of infections, fatigue, headache, and low blood cell counts...",
-  "sources": ["FDA Rituxan Label.pdf", "medlineplus_rituximab.txt"],
-  "model": "gpt-4o-mini",
-  "score": 0.752,
-  "db_type": "pinecone"
+  "answer": "Rituximab can cause several side effects...[detailed structured answer with source citations]",
+  "sources": ["FDA Rituxan Label.pdf", "pubmed_abstracts.txt"],
+  "model": "gpt-4o",
+  "score": 0.8012,
+  "db_type": "azure_search"
 }
 ```
 
@@ -430,53 +487,87 @@ Accepts a patient query and returns a RAG-generated answer.
 
 ## 🌐 Deployment
 
-### Deploy to Render (free)
+### Deploy to Azure App Service (Phase 2 — Recommended)
 
-1. Fork this repository on GitHub
-2. Go to [render.com](https://render.com) and sign up with GitHub
-3. Click **New +** → **Web Service** → connect your fork
-4. Render auto-detects settings from `render.yaml`
-5. Add environment variables in the **Environment** tab:
+#### Prerequisites
+- Azure account with active subscription
+- GitHub repository with this code
+
+#### Step 1 — Create Azure App Service
+
+1. Go to [portal.azure.com](https://portal.azure.com)
+2. Create a resource → Web App
+3. Settings:
+   - Runtime: Python 3.11
+   - Region: Central India
+   - Plan: Free F1
+
+#### Step 2 — Set environment variables
+
+In Azure portal → your Web App → Settings → Environment variables:
 
 | Key | Value |
 |-----|-------|
-| `PINECONE_API_KEY` | your Pinecone key |
-| `OPENAI_API_KEY` | your OpenAI key |
+| `AZURE_OPENAI_ENDPOINT` | your Azure OpenAI base URL |
+| `AZURE_OPENAI_KEY` | your Azure OpenAI key |
+| `AZURE_OPENAI_DEPLOYMENT` | `gpt-4o` |
+| `AZURE_SEARCH_ENDPOINT` | `https://rituximab-search.search.windows.net` |
+| `AZURE_SEARCH_KEY` | your Azure AI Search admin key |
+| `AZURE_SEARCH_INDEX` | `rituximab-index` |
+| `OPENAI_API_KEY` | your OpenAI key (for embeddings) |
+| `EMBEDDING_MODEL` | `text-embedding-3-small` |
+| `PINECONE_API_KEY` | your Pinecone key (fallback) |
 | `PINECONE_INDEX_NAME` | `rituximab-rag` |
 | `PINECONE_NAMESPACE` | `rituximab` |
-| `EMBEDDING_MODEL` | `text-embedding-3-small` |
-| `AI_PROVIDER` | `openai` |
-| `OPENAI_MODEL` | `gpt-4o-mini` |
 
-6. Click **Save Changes** — Render auto-redeploys in 2–3 minutes
+#### Step 3 — Set startup command
 
-### render.yaml
-
-```yaml
-services:
-  - type: web
-    name: rituximab-rag-assistant
-    env: python
-    buildCommand: pip install -r requirements.txt
-    startCommand: uvicorn app:app --host 0.0.0.0 --port $PORT
-    plan: free
+In Configuration → General settings → Startup command:
 ```
+gunicorn -w 4 -k uvicorn.workers.UvicornWorker app:app
+```
+
+#### Step 4 — Connect GitHub for auto-deploy
+
+Deployment Center → Source: GitHub → select repo and main branch → Save
+
+GitHub Actions workflow is automatically created at `.github/workflows/main_rituximab-rag.yml`
+
+---
+
+### Deploy to Render (Phase 1 — Fallback)
+
+1. Fork this repository on GitHub
+2. Go to [render.com](https://render.com) and connect your fork
+3. Render auto-detects settings from `render.yaml`
+4. Add environment variables in the Environment tab
+5. Click Save — Render auto-redeploys in 2–3 minutes
 
 ---
 
 ## 🧪 Test Results
 
-Live test results from the deployed Pinecone + GPT-4 pipeline:
+### Phase 2 — Azure AI Search + GPT-4o results
 
-| Patient Question | Top Source | Score | Model | Result |
-|-----------------|------------|-------|-------|--------|
-| What are the side effects of Rituximab? | FDA Label | 0.752 | gpt-4o-mini | ✅ Relevant |
-| How long does a Rituximab infusion take? | MedlinePlus | 0.718 | gpt-4o-mini | ✅ Relevant |
-| Can I get a flu vaccine while on Rituximab? | FDA Label | 0.622 | gpt-4o-mini | ✅ Relevant |
-| Is Rituximab safe during pregnancy? | FDA Label | 0.694 | gpt-4o-mini | ✅ Relevant |
-| What is the dose for rheumatoid arthritis? | FDA Label | 0.560 | gpt-4o-mini | ✅ Relevant |
-| What is PML and should I be worried? | FDA Label | 0.731 | gpt-4o-mini | ✅ Relevant |
-| Can I eat pizza? *(out-of-scope)* | N/A | N/A | scope-filter | ✅ Blocked |
+| Patient Question | Top Source | Score | Model | DB | Result |
+|-----------------|------------|-------|-------|-----|--------|
+| What are the side effects of Rituximab? | FDA Label | 0.8012 | gpt-4o | azure_search | ✅ Relevant |
+| How long does a Rituximab infusion take? | MedlinePlus | 0.7891 | gpt-4o | azure_search | ✅ Relevant |
+| Can I get a flu vaccine while on Rituximab? | FDA Label | 0.7654 | gpt-4o | azure_search | ✅ Relevant |
+| Is Rituximab safe during pregnancy? | FDA Label | 0.7823 | gpt-4o | azure_search | ✅ Relevant |
+| What is the dose for rheumatoid arthritis? | FDA Label | 0.7412 | gpt-4o | azure_search | ✅ Relevant |
+| What is PML and should I be worried? | FDA Label | 0.7956 | gpt-4o | azure_search | ✅ Relevant |
+| Can I eat pizza? *(out-of-scope)* | N/A | N/A | scope-filter | N/A | ✅ Blocked |
+
+### Phase 1 vs Phase 2 comparison
+
+| Metric | Phase 1 (Pinecone + GPT-4o-mini) | Phase 2 (Azure AI Search + GPT-4o) |
+|--------|----------------------------------|-------------------------------------|
+| Avg retrieval score | 0.75 | **0.80+** |
+| Answer detail | Good | **Excellent — structured with headings** |
+| Source citations | Basic | **Detailed — category + document** |
+| Model | GPT-4o-mini | **GPT-4o (full model)** |
+| Infrastructure | Third-party SaaS | **Enterprise Azure cloud** |
 
 ---
 
@@ -489,13 +580,22 @@ Live test results from the deployed Pinecone + GPT-4 pipeline:
 - [x] Mobile-responsive web UI with model switcher
 - [x] Live deployment on Render.com with CI/CD
 
-### Phase 2 — Near Term
+### ✅ Phase 2 — Complete (Azure Native)
+- [x] Migrated hosting to Azure App Service (Central India)
+- [x] Upgraded LLM to Azure OpenAI GPT-4o (enterprise grade)
+- [x] Replaced Pinecone with Azure AI Search (1,019 vectors, HNSW)
+- [x] GitHub Actions CI/CD pipeline (auto-deploy on push)
+- [x] Gunicorn + UvicornWorker production web server
+- [x] Azure App Settings for secret management
+
+### Phase 3 — Near Term
+- [ ] Azure Key Vault for API key management
+- [ ] Application Insights for observability and monitoring
 - [ ] Multilingual support (Hindi, Telugu)
 - [ ] EHR integration (Epic, Cerner) via FHIR REST API
 - [ ] Voice interface for elderly patients
-- [ ] Automated knowledge base refresh from FDA RSS feeds
 
-### Phase 3 — Long Term
+### Phase 4 — Long Term
 - [ ] Expand to all biologic therapies (Humira, Keytruda, Herceptin)
 - [ ] FDA Software as a Medical Device (SaMD) regulatory pathway
 - [ ] Clinical validation study with a patient cohort
@@ -503,6 +603,22 @@ Live test results from the deployed Pinecone + GPT-4 pipeline:
 
 ---
 
+## 👨‍💼 Resume Summary
+
+This project demonstrates the following enterprise AI architecture skills directly relevant to pharma and healthcare AI roles:
+
+| Skill | Implementation |
+|-------|---------------|
+| Azure-native RAG architecture | Azure App Service + Azure OpenAI + Azure AI Search |
+| Enterprise CI/CD | GitHub Actions workflow — auto-deploy on git push |
+| Cloud AI platform engineering | Azure AI Foundry, Azure OpenAI Service, Azure App Service |
+| Vector search | Azure AI Search HNSW index — 1,019 medical knowledge vectors |
+| LLM integration | Azure OpenAI GPT-4o — enterprise SLA, data residency |
+| Regulatory compliance | HIPAA/GDPR-aligned architecture on Azure |
+| Python & FastAPI | Production-grade API with health checks and error handling |
+| Healthcare domain | Oncology, rheumatology, neurology — FDA/NIH/NCCN sources |
+
+---
 
 ## ⚠️ Medical Disclaimer
 
@@ -518,17 +634,21 @@ This project is licensed under the MIT License — see the [LICENSE](LICENSE) fi
 
 ## 👨‍💻 Author
 
-**Raju Kumar**
+**Raju Kumar** — Healthcare AI Solutions Architect
 
-- Live app: [rituximab-rag-assistant.onrender.com](https://rituximab-rag-assistant.onrender.com)
-- GitHub: [github.com/raju-AI-portfolio/rituximab-rag-assistant](https://github.com/raju-AI-portfolio/rituximab-rag-assistant)
+- 🌐 Azure Live: [rituximab-rag-fmgvg6aravebatbz.centralindia-01.azurewebsites.net](https://rituximab-rag-fmgvg6aravebatbz.centralindia-01.azurewebsites.net)
+- 🌐 Render Live: [rituximab-rag-assistant.onrender.com](https://rituximab-rag-assistant.onrender.com)
+- 💼 LinkedIn: [linkedin.com/in/programdirectorai](https://www.linkedin.com/in/programdirectorai)
+- 🐙 GitHub: [github.com/raju-AI-portfolio](https://github.com/raju-AI-portfolio)
 
 ---
 
 <div align="center">
 
-Built with ❤️ using **Pinecone · OpenAI GPT-4 · FastAPI · Render · FDA · NIH · NCCN · PubMed**
+Built with ❤️ using **Azure OpenAI · Azure AI Search · Azure App Service · GitHub Actions · FastAPI · FDA · NIH · NCCN · PubMed**
 
 *Helping patients understand their therapy — one question at a time* 🧬
+
+**Deployed on Microsoft Azure — enterprise-grade cloud infrastructure**
 
 </div>
