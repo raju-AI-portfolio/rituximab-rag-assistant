@@ -19,6 +19,7 @@
 
 </div>
 
+Rituximab Patient Assistant Live on Azure: https://rituximab-rag-fmgvg6aravebatbz.centralindia-01.azurewebsites.net/
 ---
 
 ## 📋 Table of Contents
@@ -600,23 +601,6 @@ GitHub Actions workflow is automatically created at `.github/workflows/main_ritu
 - [ ] FDA Software as a Medical Device (SaMD) regulatory pathway
 - [ ] Clinical validation study with a patient cohort
 - [ ] Hospital white-label licensing model
-
----
-
-## 👨‍💼 Resume Summary
-
-This project demonstrates the following enterprise AI architecture skills directly relevant to pharma and healthcare AI roles:
-
-| Skill | Implementation |
-|-------|---------------|
-| Azure-native RAG architecture | Azure App Service + Azure OpenAI + Azure AI Search |
-| Enterprise CI/CD | GitHub Actions workflow — auto-deploy on git push |
-| Cloud AI platform engineering | Azure AI Foundry, Azure OpenAI Service, Azure App Service |
-| Vector search | Azure AI Search HNSW index — 1,019 medical knowledge vectors |
-| LLM integration | Azure OpenAI GPT-4o — enterprise SLA, data residency |
-| Regulatory compliance | HIPAA/GDPR-aligned architecture on Azure |
-| Python & FastAPI | Production-grade API with health checks and error handling |
-| Healthcare domain | Oncology, rheumatology, neurology — FDA/NIH/NCCN sources |
 
 ---
 
