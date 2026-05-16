@@ -18,9 +18,8 @@
 *Helping patients understand their Rituximab therapy — 24/7, grounded in FDA, NIH, NCCN and PubMed*
 
 </div>
-
 ---
-Rituximab Patient Assistant Live on Azure: https://rituximab-rag-fmgvg6aravebatbz.centralindia-01.azurewebsites.net/
+**Rituximab Patient Assistant Live on Azure: https://rituximab-rag-fmgvg6aravebatbz.centralindia-01.azurewebsites.net/**
 ---
 ## 📋 Table of Contents
 
