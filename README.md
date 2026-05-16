@@ -20,6 +20,7 @@
 </div>
 
 ---
+**Rituximab Patient Assistant Live on Azure: https://rituximab-rag-fmgvg6aravebatbz.centralindia-01.azurewebsites.net/**
 ---
 ## 📋 Table of Contents
 
