@@ -16,7 +16,7 @@
 [![License](https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge)](LICENSE)
 
 *Helping patients understand their Rituximab therapy — 24/7, grounded in FDA, NIH, NCCN and PubMed*
-
+**Rituximab Patient Assistant Live on Azure: https://rituximab-rag-fmgvg6aravebatbz.centralindia-01.azurewebsites.net/**
 </div>
 
 ---
