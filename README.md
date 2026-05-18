@@ -211,6 +211,10 @@ What is the dose for rheumatoid arthritis?
 │   HTTPS · Azure-managed TLS certificate                      │
 └──────────────────────────────────────────────────────────────┘
 ```
+**Rituximab RAG Phase2 Architecture:**
+<img width="1360" height="2040" alt="image" src="https://github.com/user-attachments/assets/58fa067f-6565-49e3-b18a-ef533a7e0bda" />
+
+
 
 ### CI/CD Pipeline
 
