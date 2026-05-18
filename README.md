@@ -36,7 +36,7 @@
 - [Deployment](#-deployment)
 - [Test Results](#-test-results)
 - [Roadmap](#-roadmap)
-- [Resume Summary](#-resume-summary)
+- Rituximab_Project_Report_Business_Case.pdf
 
 ---
 
