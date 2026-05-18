@@ -36,7 +36,6 @@
 - [Deployment](#-deployment)
 - [Test Results](#-test-results)
 - [Roadmap](#-roadmap)
-- Rituximab_Project_Report_Business_Case.pdf
 
 ---
 
@@ -625,6 +624,7 @@ This project is licensed under the MIT License — see the [LICENSE](LICENSE) fi
 
 - 🌐 Azure Live: [rituximab-rag-fmgvg6aravebatbz.centralindia-01.azurewebsites.net](https://rituximab-rag-fmgvg6aravebatbz.centralindia-01.azurewebsites.net)
 - 🌐 Render Live: [rituximab-rag-assistant.onrender.com](https://rituximab-rag-assistant.onrender.com)
+- Project Report & Business Case: 
 - 💼 LinkedIn: [linkedin.com/in/programdirectorai](https://www.linkedin.com/in/programdirectorai)
 - 🐙 GitHub: [github.com/raju-AI-portfolio](https://github.com/raju-AI-portfolio)
 
