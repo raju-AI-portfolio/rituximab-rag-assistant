@@ -624,10 +624,9 @@ This project is licensed under the MIT License — see the [LICENSE](LICENSE) fi
 
 - 🌐 Azure Live: [rituximab-rag-fmgvg6aravebatbz.centralindia-01.azurewebsites.net](https://rituximab-rag-fmgvg6aravebatbz.centralindia-01.azurewebsites.net)
 - 🌐 Render Live: [rituximab-rag-assistant.onrender.com](https://rituximab-rag-assistant.onrender.com)
-- Project Report & Business Case: https://github.com/raju-AI-portfolio/rituximab-rag-assistant/blob/b2a386f0fc570a0fb7b13f9c1400736156b74833/Rituximab_Project_Report_Business_Case.pdf
 - 💼 LinkedIn: [linkedin.com/in/programdirectorai](https://www.linkedin.com/in/programdirectorai)
 - 🐙 GitHub: [github.com/raju-AI-portfolio](https://github.com/raju-AI-portfolio)
-
+- Project Report & Business Case: https://github.com/raju-AI-portfolio/rituximab-rag-assistant/blob/b2a386f0fc570a0fb7b13f9c1400736156b74833/Rituximab_Project_Report_Business_Case.pdf
 ---
 
 <div align="center">
