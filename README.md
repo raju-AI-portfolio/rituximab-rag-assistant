@@ -609,7 +609,7 @@ GitHub Actions workflow is automatically created at `.github/workflows/main_ritu
 - [ ] Hospital white-label licensing model
 
 ---
-![Uploading ChatGPT Image Jun 4, 2026, 10_49_16 PM.png…]()
+<img width="1024" height="1536" alt="governance" src="https://github.com/user-attachments/assets/c710e489-4247-4bdb-b961-f9251ff5f3ac" />
 
 
 ---
