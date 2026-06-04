@@ -210,8 +210,10 @@ What is the dose for rheumatoid arthritis?
 │   HTTPS · Azure-managed TLS certificate                      │
 └──────────────────────────────────────────────────────────────┘
 ```
-**Rituximab RAG Phase2 Architecture:**
-<img width="1360" height="2040" alt="image" src="https://github.com/user-attachments/assets/58fa067f-6565-49e3-b18a-ef533a7e0bda" />
+**Rituximab RAG Phase2 Solution Architecture:**
+
+<img width="1536" height="1024" alt="ChatGPT Image Jun 4, 2026, 04_56_39 PM" src="https://github.com/user-attachments/assets/0f3ebd72-255b-43ea-90c3-cc0da06b9315" />
+
 
 
 
