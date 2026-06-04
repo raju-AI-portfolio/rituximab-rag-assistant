@@ -276,6 +276,8 @@ Fallback LLM      OpenAI API direct  ·  GPT-4o-mini
 ```
 
 ---
+<img width="1024" height="1536" alt="Technologyarchitect" src="https://github.com/user-attachments/assets/d3659436-aa6f-4dba-bbd7-05cb8f5b932d" />
+---
 
 ## 🚀 Getting Started
 
