@@ -609,7 +609,10 @@ GitHub Actions workflow is automatically created at `.github/workflows/main_ritu
 - [ ] Hospital white-label licensing model
 
 ---
+![Uploading ChatGPT Image Jun 4, 2026, 10_49_16 PM.png…]()
 
+
+---
 ## ⚠️ Medical Disclaimer
 
 This application is for **educational purposes only**. It is not a substitute for professional medical advice, diagnosis, or treatment. Always consult your doctor or healthcare provider before making any medical decisions. In case of emergency call your local emergency services immediately.
