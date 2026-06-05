@@ -609,8 +609,7 @@ GitHub Actions workflow is automatically created at `.github/workflows/main_ritu
 - [ ] Hospital white-label licensing model
 
 ---
-<img width="1024" height="1536" alt="governance" src="https://github.com/user-attachments/assets/c710e489-4247-4bdb-b961-f9251ff5f3ac" />
-
+<img width="1086" height="1448" alt="Securitygovernance" src="https://github.com/user-attachments/assets/8728dba0-193d-4410-8b53-7cb742bae3c4" />
 
 ---
 ## ⚠️ Medical Disclaimer
